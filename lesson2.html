@@ -493,8 +493,7 @@ document.getElementById("repeatSpeakBtn").onclick = function() {
             feedback.style.display = "block";
 
             if (
-                /coffee/i.test(text) &&
-                /sandwich/i.test(text)
+            /i'd like|i would like/i.test(text)  
             ) {
 
                 feedback.innerHTML =
