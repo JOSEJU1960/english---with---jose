@@ -452,13 +452,8 @@ document.getElementById("checkConversation").onclick = function() {
     feedback.style.display = "block";
 
     if (
-        text.includes("like") &&
-        (
-            text.includes("coffee") ||
-            text.includes("sandwich") ||
-            text.includes("tea") ||
-            text.includes("water")
-        )
+            text.includes("i'd like") ||
+            text.includes("i would like") 
     ) {
 
         feedback.innerHTML =
