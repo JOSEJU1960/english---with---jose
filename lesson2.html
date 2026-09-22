@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English with Jose - Lesson 2</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    color: #263238;
+}
+
+header {
+    background: #263b5e;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header p {
+    margin: 8px 0 0;
+}
+
+main {
+    max-width: 850px;
+    margin: 25px auto;
+    padding: 0 15px 40px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+button {
+    background: #2f6fed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    margin: 5px 5px 5px 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2459bd;
+}
+
+.option {
+    background: #edf2f7;
+    color: #263238;
+}
+
+textarea {
+    width: 95%;
+    min-height: 70px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+}
+
+.feedback {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fff3cd;
+    border-radius: 8px;
+    display: none;
+}
+
+.success {
+    background: #d9f7e5;
+}
+
+.dialogue {
+    line-height: 1.8;
+    background: #f7f9fc;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.progress {
+    background: #dfe5ec;
+    height: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#bar {
+    width: 0%;
+    height: 100%;
+    background: #2f6fed;
+    transition: width 0.4s;
+}
+
+.vocab {
+    line-height: 1.9;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🇬🇧 English with Jose</h1>
+<p>Lesson 2 · At a café ☕</p>
+<p>A1–A2 · Aproximadamente 15 minutos</p>
+</header>
+
+<main>
+
+<div class="card">
+<h2>Tu progreso</h2>
+<div class="progress">
+<div id="bar"></div>
+</div>
+<p id="progressText">Progreso: 0 de 5 pasos</p>
+</div>
+
+<div class="card">
+<h2>1. 🎧 Listening</h2>
+
+<p>Escucha esta conversación en una cafetería.</p>
+
+<button id="listenBtn">▶ Escuchar</button>
+<button id="slowBtn">🐢 Más despacio</button>
+
+<div class="dialogue">
+<p><b>Waiter:</b> Good morning. What would you like?</p>
+<p><b>Jose:</b> I'd like a coffee and a sandwich, please.</p>
+<p><b>Waiter:</b> Would you like milk?</p>
+<p><b>Jose:</b> Yes, please. No sugar.</p>
+<p><b>Waiter:</b> Anything else?</p>
+<p><b>Jose:</b> No, that's all. How much is it?</p>
+<p><b>Waiter:</b> It's six euros.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>2. 🧠 Comprensión</h2>
+
+<p><b>What does Jose order?</b></p>
+
+<button class="option" data-answer="wrong">
+Tea and cake
+</button>
+
+<button class="option" data-answer="correct">
+Coffee and a sandwich
+</button>
+
+<button class="option" data-answer="wrong">
+Water and salad
+</button>
+
+<div id="listenFeedback" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>3. 🎤 Speaking</h2>
+
+<p>Escucha la pregunta:</p>
+
+<button id="questionBtn">🔊 What would you like?</button>
+
+<p>Ahora contesta tú en inglés.</p>
+
+<p><b>Ejemplo:</b> I'd like a coffee, please.</p>
+
+<button id="speakBtn">🎙️ Hablar</button>
+
+<p id="voiceStatus"></p>
+
+<div id="voiceFeedback" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>4. 💬 Mini conversation</h2>
+
+<p>Imagina que estás en una cafetería.</p>
+
+<p><b>Waiter:</b> What would you like?</p>
+
+<p>Escribe tu respuesta:</p>
+
+<textarea id="conversation"
+placeholder="I'd like..."></textarea>
+
+<br><br>
+
+<button id="checkConversation">
+Comprobar respuesta
+</button>
+
+<div id="conversationFeedback" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>5. 🔁 Repetición</h2>
+
+<p>Escucha y después repite:</p>
+
+<p><b>I'd like a coffee and a sandwich, please.</b></p>
+
+<button id="modelBtn">🔊 Escuchar modelo</button>
+
+<button id="repeatSpeakBtn">🎙️ Repetir</button>
+
+<div id="repeatFeedback" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>📚 Vocabulary</h2>
+
+<div class="vocab">
+<b>coffee</b> — café<br>
+<b>sandwich</b> — bocadillo / sándwich<br>
+<b>milk</b> — leche<br>
+<b>sugar</b> — azúcar<br>
+<b>please</b> — por favor<br>
+<b>Anything else?</b> — ¿Algo más?<br>
+<b>That's all</b> — Eso es todo<br>
+<b>How much is it?</b> — ¿Cuánto cuesta?
+</div>
+</div>
+
+<div class="card">
+<h2>💡 Grammar</h2>
+
+<p>Para pedir algo educadamente usamos:</p>
+
+<p><b>I'd like + cosa que queremos</b></p>
+
+<p>
+I'd like a coffee.<br>
+I'd like a sandwich.<br>
+I'd like some water.
+</p>
+
+<p><b>I'd like</b> = <b>I would like</b>.</p>
+</div>
+
+<div class="card">
+<h2>🏁 Resultado</h2>
+
+<div id="finalResult">
+Completa los 5 ejercicios para terminar la lección.
+</div>
+</div>
+
+</main>
+
+<script>
+
+const dialogue =
+"Good morning. What would you like? " +
+"I'd like a coffee and a sandwich, please. " +
+"Would you like milk? " +
+"Yes, please. No sugar. " +
+"Anything else? " +
+"No, that's all. How much is it? " +
+"It's six euros.";
+
+let completed = new Set();
+
+function speak(text, rate = 0.82) {
+
+    if (!("speechSynthesis" in window)) {
+        alert("Tu navegador no permite síntesis de voz.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const u = new SpeechSynthesisUtterance(text);
+
+    u.lang = "en-GB";
+    u.rate = rate;
+
+    window.speechSynthesis.speak(u);
+}
+
+function updateProgress() {
+
+    document.getElementById("bar").style.width =
+        (completed.size * 20) + "%";
+
+    document.getElementById("progressText").textContent =
+        "Progreso: " + completed.size + " de 5 pasos";
+
+    if (completed.size === 5) {
+
+        document.getElementById("finalResult").innerHTML =
+        "🎉 <b>Excellent, Jose!</b><br><br>" +
+        "Has completado la Lección 2.<br>" +
+        "Ya puedes pedir algo sencillo en una cafetería en inglés.";
+    }
+}
+
+function completeStep(n) {
+    completed.add(n);
+    updateProgress();
+}
+
+function createRecognition(callback) {
+
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!Recognition) return null;
+
+    const recognition = new Recognition();
+
+    recognition.lang = "en-GB";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = function(event) {
+        callback(event.results[0][0].transcript);
+    };
+
+    return recognition;
+}
+
+document.getElementById("listenBtn").onclick = function() {
+    speak(dialogue);
+    completeStep(1);
+};
+
+document.getElementById("slowBtn").onclick = function() {
+    speak(dialogue, 0.58);
+    completeStep(1);
+};
+
+document.querySelectorAll(".option").forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById("listenFeedback");
+
+        feedback.style.display = "block";
+
+        if (button.dataset.answer === "correct") {
+
+            feedback.textContent =
+                "✅ Correct! Jose orders a coffee and a sandwich.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(2);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ Try again. Listen carefully to Jose's order.";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+document.getElementById("questionBtn").onclick = function() {
+    speak("What would you like?");
+};
+
+document.getElementById("speakBtn").onclick = function() {
+
+    const status =
+        document.getElementById("voiceStatus");
+
+    const feedback =
+        document.getElementById("voiceFeedback");
+
+    const recognition =
+        createRecognition(function(text) {
+
+            status.textContent =
+                'Has dicho: "' + text + '"';
+
+            feedback.style.display = "block";
+
+            if (
+                /coffee|sandwich|tea|water|juice/i.test(text)
+            ) {
+
+                feedback.innerHTML =
+                    "✅ Very good! I understood your order.";
+
+                feedback.className =
+                    "feedback success";
+
+                completeStep(3);
+
+            } else {
+
+                feedback.innerHTML =
+                    "Buen intento. Prueba, por ejemplo: " +
+                    "<b>I'd like a coffee, please.</b>";
+
+                feedback.className =
+                    "feedback";
+            }
+        });
+
+    if (!recognition) {
+
+        status.textContent =
+            "El reconocimiento de voz no está disponible.";
+
+        return;
+    }
+
+    recognition.onstart = function() {
+        status.textContent =
+            "🎙️ Habla ahora...";
+    };
+
+    recognition.onerror = function() {
+        status.textContent =
+            "No he podido reconocerte. Inténtalo otra vez.";
+    };
+
+    recognition.start();
+};
+
+document.getElementById("checkConversation").onclick = function() {
+
+    const text =
+        document.getElementById("conversation")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const feedback =
+        document.getElementById("conversationFeedback");
+
+    feedback.style.display = "block";
+
+    if (
+        text.includes("like") &&
+        (
+            text.includes("coffee") ||
+            text.includes("sandwich") ||
+            text.includes("tea") ||
+            text.includes("water")
+        )
+    ) {
+
+        feedback.innerHTML =
+            "✅ Very good! That's a natural way to order.";
+
+        feedback.className =
+            "feedback success";
+
+        completeStep(4);
+
+    } else {
+
+        feedback.innerHTML =
+            "Prueba con: <b>I'd like a coffee, please.</b>";
+
+        feedback.className =
+            "feedback";
+    }
+};
+
+document.getElementById("modelBtn").onclick = function() {
+
+    speak(
+        "I'd like a coffee and a sandwich, please.",
+        0.72
+    );
+};
+
+document.getElementById("repeatSpeakBtn").onclick = function() {
+
+    const feedback =
+        document.getElementById("repeatFeedback");
+
+    const recognition =
+        createRecognition(function(text) {
+
+            feedback.style.display = "block";
+
+            if (
+                /coffee/i.test(text) &&
+                /sandwich/i.test(text)
+            ) {
+
+                feedback.innerHTML =
+                    "🎉 Excellent! Very good pronunciation practice.";
+
+                feedback.className =
+                    "feedback success";
+
+                completeStep(5);
+
+            } else {
+
+                feedback.innerHTML =
+                    "Buen intento. Escucha otra vez y repite: " +
+                    "<b>I'd like a coffee and a sandwich, please.</b>";
+
+                feedback.className =
+                    "feedback";
+            }
+        });
+
+    if (!recognition) {
+
+        feedback.style.display = "block";
+
+        feedback.textContent =
+            "El reconocimiento de voz no está disponible.";
+
+        return;
+    }
+
+    recognition.start();
+};
+
+</script>
+
+</body>
+</html>
