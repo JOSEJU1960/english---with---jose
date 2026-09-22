@@ -492,12 +492,19 @@ document.getElementById("repeatSpeakBtn").onclick = function() {
 
             feedback.style.display = "block";
 
-            if (
-            /i'd like|i would like|id like|i like/i.test(text)  
-            ) {
+            const heard = text.toLowerCase().trim();
+
+            const usesIdLike =
+                heard.includes("i'd like") ||
+                heard.includes("i would like") ||
+                heard.includes("id like");
+
+            if (usesIdLike) {
 
                 feedback.innerHTML =
-                    "🎉 Excellent! Very good pronunciation practice.";
+                    '🎉 <b>Excellent!</b><br><br>' +
+                    'El micrófono ha entendido:<br>' +
+                    '<b>"' + text + '"</b>';
 
                 feedback.className =
                     "feedback success";
@@ -507,8 +514,9 @@ document.getElementById("repeatSpeakBtn").onclick = function() {
             } else {
 
                 feedback.innerHTML =
-                    "Buen intento. Escucha otra vez y repite: " +
-                    "<b>I'd like a coffee and a sandwich, please.</b>";
+                    'El micrófono ha entendido:<br>' +
+                    '<b>"' + text + '"</b><br><br>' +
+                    'Inténtalo otra vez comenzando con <b>I'd like...</b>';
 
                 feedback.className =
                     "feedback";
