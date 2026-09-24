@@ -395,11 +395,12 @@ document.getElementById("speakBtn").onclick = function() {
             feedback.style.display = "block";
 
             if (
-                /coffee|sandwich|tea|water|juice/i.test(text)
+            /i'd like|i would like|id like/i.test(text)   
             ) {
 
                 feedback.innerHTML =
-                    "✅ Very good! I understood your order.";
+    '✅ <b>Very good!</b><br>' +
+    'El micrófono ha entendido: <b>"' + text + '"</b>';
 
                 feedback.className =
                     "feedback success";
@@ -408,9 +409,9 @@ document.getElementById("speakBtn").onclick = function() {
 
             } else {
 
-                feedback.innerHTML =
-                    "Buen intento. Prueba, por ejemplo: " +
-                    "<b>I'd like a coffee, please.</b>";
+              feedback.innerHTML =
+    'El micrófono ha entendido: <b>"' + text + '"</b><br><br>' +
+    "Prueba otra vez comenzando con <b>I'd like...</b>";  
 
                 feedback.className =
                     "feedback";
