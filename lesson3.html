@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>English with Jose - Lesson 3</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    color: #263238;
+}
+
+header {
+    background: #234a7c;
+    color: white;
+    text-align: center;
+    padding: 22px 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+}
+
+main {
+    max-width: 800px;
+    margin: auto;
+    padding: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+h2 {
+    color: #234a7c;
+    margin-top: 0;
+}
+
+button {
+    background: #234a7c;
+    color: white;
+    border: 0;
+    border-radius: 9px;
+    padding: 11px 16px;
+    margin: 5px 4px 5px 0;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.secondary {
+    background: #607d8b;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 8px 0;
+}
+
+.feedback {
+    display: none;
+    background: #fff3cd;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+}
+
+.success {
+    background: #d9f5df;
+}
+
+.example {
+    background: #eef4fb;
+    padding: 12px;
+    border-left: 4px solid #234a7c;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.realEnglish {
+    background: #fff7e6;
+    padding: 14px;
+    border-left: 4px solid #e59b24;
+    border-radius: 6px;
+    margin: 12px 0;
+}
+
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 85px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+}
+
+.progress {
+    height: 13px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#bar {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    transition: .3s;
+}
+
+.small {
+    font-size: 14px;
+    color: #555;
+}
+
+.hiddenText {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🇬🇧 English with Jose</h1>
+    <p>Lesson 3 · Making Plans 📅</p>
+    <p>A1–A2 · Listening + Speaking + Real English</p>
+</header>
+
+<main>
+
+<div class="card">
+    <h2>Tu progreso</h2>
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+    <p id="progressText">Progreso: 0 de 7 pasos</p>
+</div>
+
+
+<div class="card">
+    <h2>1. 🎧 Primero escucha</h2>
+
+    <p>
+        Escucha la conversación <b>sin leerla</b>.
+        No necesitas entender todas las palabras.
+    </p>
+
+    <button id="blindListenBtn">▶ Escuchar conversación</button>
+
+    <p class="small">
+        Intenta descubrir: ¿qué planes tiene Anna para el sábado?
+    </p>
+
+    <button class="option blindOption" data-answer="family">
+        Va a visitar a su familia.
+    </button>
+
+    <button class="option blindOption" data-answer="work">
+        Va a trabajar.
+    </button>
+
+    <button class="option blindOption" data-answer="travel">
+        Va a viajar a Londres.
+    </button>
+
+    <div id="blindFeedback" class="feedback"></div>
+</div>
+
+
+<div class="card">
+    <h2>2. 👀 Ahora escucha con el texto</h2>
+
+    <button id="listenBtn">▶ Velocidad normal</button>
+    <button id="slowBtn" class="secondary">🐢 Más despacio</button>
+
+    <div class="example">
+        <p><b>Jose:</b> What are you going to do this weekend?</p>
+        <p><b>Anna:</b> I'm going to visit my family on Saturday.</p>
+        <p><b>Jose:</b> That sounds nice. What about Sunday?</p>
+        <p><b>Anna:</b> I don't have any plans yet.</p>
+        <p><b>Jose:</b> It's going to rain.</p>
+        <p><b>Anna:</b> Really? Then I'll stay at home and watch a movie.</p>
+    </div>
+
+    <p class="small">
+        Ahora compara lo que habías entendido con el texto real.
+    </p>
+</div>
+
+
+<div class="card">
+    <h2>3. 🧠 Going to o Will?</h2>
+
+    <p>
+        No significan exactamente lo mismo en todos los casos.
+    </p>
+
+    <div class="example">
+        <b>I'm going to visit my family.</b><br>
+        Ya existe un plan o una intención.
+    </div>
+
+    <div class="example">
+        <b>I'll stay at home.</b><br>
+        La decisión se toma en ese momento.
+    </div>
+
+    <p><b>Situación:</b> Acabas de ver que una persona lleva muchas bolsas.</p>
+    <p>Decides ayudarla en ese momento. ¿Qué dirías?</p>
+
+    <button class="option futureOption" data-answer="will">
+        I'll help you.
+    </button>
+
+    <button class="option futureOption" data-answer="going">
+        I'm going to help you tomorrow.
+    </button>
+
+    <div id="futureFeedback" class="feedback"></div>
+</div>
+
+
+<div class="card">
+    <h2>4. 👂 Así lo vas a oír</h2>
+
+    <p>
+        En una conversación informal, algunas palabras se reducen.
+    </p>
+
+    <div class="realEnglish">
+        <b>Forma estándar:</b><br>
+        What are you going to do tomorrow?<br><br>
+
+        <b>Habla informal:</b><br>
+        What are you gonna do tomorrow?
+    </div>
+
+    <p>
+        <b>gonna</b> es muy frecuente al hablar.
+        Conviene reconocerla al escuchar, aunque al escribir normalmente
+        utilizaremos <b>going to</b>.
+    </p>
+
+    <button id="standardBtn">🔊 Escuchar forma estándar</button>
+    <button id="naturalBtn">🔊 Escuchar forma informal</button>
+
+    <p><b>Ahora escucha sin mirar la respuesta:</b></p>
+
+    <button id="mysteryBtn">🎧 Escuchar</button>
+
+    <button class="option mysteryOption" data-answer="tomorrow">
+        Pregunta qué vas a hacer mañana.
+    </button>
+
+    <button class="option mysteryOption" data-answer="yesterday">
+        Pregunta qué hiciste ayer.
+    </button>
+
+    <div id="mysteryFeedback" class="feedback"></div>
+</div>
+
+
+<div class="card">
+    <h2>5. 🎤 Speaking libre</h2>
+
+    <p>Escucha la pregunta y contesta con tus propios planes.</p>
+
+    <button id="questionBtn">🔊 Escuchar pregunta</button>
+    <button id="speakBtn">🎙️ Hablar</button>
+
+    <p id="voiceStatus" class="small"></p>
+    <div id="voiceFeedback" class="feedback"></div>
+
+    <div class="example">
+        Ejemplos posibles:<br>
+        I'm going to stay at home.<br>
+        I'm going to visit my family.<br>
+        I'm going to go out with my friends.
+    </div>
+</div>
+
+
+<div class="card">
+    <h2>6. 💬 Mini conversation</h2>
+
+    <p><b>Anna:</b> What are you going to do this weekend?</p>
+
+    <textarea id="conversation"
+        placeholder="Escribe tu propia respuesta en inglés..."></textarea>
+
+    <button id="checkConversation">Comprobar respuesta</button>
+
+    <div id="conversationFeedback" class="feedback"></div>
+</div>
+
+
+<div class="card">
+    <h2>7. 🔄 Otra forma de decirlo</h2>
+
+    <p>
+        Una misma idea puede expresarse de distintas maneras.
+    </p>
+
+    <div class="example">
+        <b>I'm going to stay home tonight.</b><br>
+        Tengo esa intención o plan.
+    </div>
+
+    <div class="example">
+        <b>I'll stay home tonight.</b><br>
+        Puede expresar una decisión tomada ahora.
+    </div>
+
+    <div class="realEnglish">
+        👂 También puedes oír:<br>
+        <b>I'm gonna stay home tonight.</b><br><br>
+        Es habitual en conversación informal.
+    </div>
+
+    <button id="finishBtn">✅ Terminar lección</button>
+
+    <div id="finalFeedback" class="feedback"></div>
+</div>
+
+</main>
+
+<footer>
+    English with Jose · Practical English
+</footer>
+
+
+<script>
+
+const dialogue =
+    "Jose: What are you going to do this weekend? " +
+    "Anna: I'm going to visit my family on Saturday. " +
+    "Jose: That sounds nice. What about Sunday? " +
+    "Anna: I don't have any plans yet. " +
+    "Jose: It's going to rain. " +
+    "Anna: Really? Then I'll stay at home and watch a movie.";
+
+let completed = new Set();
+
+
+function speak(text, rate = 0.82) {
+
+    if (!("speechSynthesis" in window)) {
+        alert("Tu navegador no permite síntesis de voz.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.lang = "en-GB";
+    utterance.rate = rate;
+    utterance.volume = 1;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+
+function completeStep(number) {
+
+    completed.add(number);
+
+    document.getElementById("bar").style.width =
+        ((completed.size / 7) * 100) + "%";
+
+    document.getElementById("progressText").textContent =
+        "Progreso: " + completed.size + " de 7 pasos";
+}
+
+
+function createRecognition(callback) {
+
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!Recognition) return null;
+
+    const recognition = new Recognition();
+
+    recognition.lang = "en-GB";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = function(event) {
+        callback(event.results[0][0].transcript);
+    };
+
+    return recognition;
+}
+
+
+/* PASO 1 */
+
+document.getElementById("blindListenBtn").onclick = function() {
+    speak(dialogue);
+};
+
+document.querySelectorAll(".blindOption").forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById("blindFeedback");
+
+        feedback.style.display = "block";
+
+        if (button.dataset.answer === "family") {
+
+            feedback.innerHTML =
+                "✅ Correcto. Anna va a visitar a su familia el sábado.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(1);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ No exactamente. Escucha otra vez antes de mirar el texto.";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 2 */
+
+document.getElementById("listenBtn").onclick = function() {
+    speak(dialogue);
+    completeStep(2);
+};
+
+document.getElementById("slowBtn").onclick = function() {
+    speak(dialogue, 0.58);
+    completeStep(2);
+};
+
+
+/* PASO 3 */
+
+document.querySelectorAll(".futureOption").forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById("futureFeedback");
+
+        feedback.style.display = "block";
+
+        if (button.dataset.answer === "will") {
+
+            feedback.innerHTML =
+                "✅ Correcto. <b>I'll help you.</b> es natural para una decisión tomada en ese momento.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(3);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ En esta situación es más natural: <b>I'll help you.</b>";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 4 */
+
+document.getElementById("standardBtn").onclick = function() {
+    speak("What are you going to do tomorrow?", 0.82);
+};
+
+document.getElementById("naturalBtn").onclick = function() {
+    speak("What are you gonna do tomorrow?", 0.95);
+};
+
+document.getElementById("mysteryBtn").onclick = function() {
+    speak("What are you gonna do tomorrow?", 1);
+};
+
+document.querySelectorAll(".mysteryOption").forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById("mysteryFeedback");
+
+        feedback.style.display = "block";
+
+        if (button.dataset.answer === "tomorrow") {
+
+            feedback.innerHTML =
+                "✅ Exacto. Has reconocido <b>gonna</b> dentro de una frase natural.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(4);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ Escucha otra vez. La palabra final es <b>tomorrow</b>.";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 5 */
+
+document.getElementById("questionBtn").onclick = function() {
+    speak("What are you going to do this weekend?");
+};
+
+document.getElementById("speakBtn").onclick = function() {
+
+    const status =
+        document.getElementById("voiceStatus");
+
+    const feedback =
+        document.getElementById("voiceFeedback");
+
+    const recognition =
+        createRecognition(function(text) {
+
+            status.textContent =
+                'El micrófono ha entendido: "' + text + '"';
+
+            const heard =
+                text.toLowerCase().trim();
+
+            feedback.style.display = "block";
+
+            if (
+                heard.includes("going to") ||
+                heard.includes("gonna") ||
+                heard.includes("i will") ||
+                heard.includes("i'll")
+            ) {
+
+                feedback.innerHTML =
+                    '✅ <b>Muy bien.</b><br>' +
+                    'Has expresado una idea de futuro.<br><br>' +
+                    'El micrófono ha entendido:<br><b>"' +
+                    text + '"</b>';
+
+                feedback.className =
+                    "feedback success";
+
+                completeStep(5);
+
+            } else {
+
+                feedback.innerHTML =
+                    'He entendido:<br><b>"' + text + '"</b><br><br>' +
+                    "Intenta expresar tu plan con <b>I'm going to...</b>";
+
+                feedback.className =
+                    "feedback";
+            }
+        });
+
+    if (!recognition) {
+
+        status.textContent =
+            "El reconocimiento de voz no está disponible en este navegador.";
+
+        return;
+    }
+
+    recognition.onstart = function() {
+        status.textContent =
+            "🎙️ Habla ahora...";
+    };
+
+    recognition.onerror = function(event) {
+
+        status.textContent =
+            event.error === "not-allowed"
+            ? "⚠️ Debes permitir el uso del micrófono."
+            : "No he podido reconocerte. Inténtalo otra vez.";
+    };
+
+    recognition.start();
+};
+
+
+/* PASO 6 */
+
+document.getElementById("checkConversation").onclick = function() {
+
+    const text =
+        document.getElementById("conversation")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const feedback =
+        document.getElementById("conversationFeedback");
+
+    feedback.style.display = "block";
+
+    if (
+        text.includes("going to") ||
+        text.includes("gonna") ||
+        text.includes("i will") ||
+        text.includes("i'll")
+    ) {
+
+        feedback.innerHTML =
+            "✅ Respuesta válida.<br><br>" +
+            "No existe una única respuesta correcta: lo importante es que expreses tu propio plan.";
+
+        feedback.className =
+            "feedback success";
+
+        completeStep(6);
+
+    } else {
+
+        feedback.innerHTML =
+            "Tu respuesta puede ser perfectamente válida en otro contexto, " +
+            "pero aquí estamos practicando el futuro.<br><br>" +
+            "Prueba, por ejemplo, comenzando con <b>I'm going to...</b>";
+
+        feedback.className =
+            "feedback";
+    }
+};
+
+
+/* PASO 7 */
+
+document.getElementById("finishBtn").onclick = function() {
+
+    const feedback =
+        document.getElementById("finalFeedback");
+
+    feedback.style.display = "block";
+
+    completeStep(7);
+
+    feedback.innerHTML =
+        "🎉 <b>Lesson 3 completed!</b><br><br>" +
+        "Has practicado:<br>" +
+        "• going to para planes e intenciones<br>" +
+        "• will para decisiones espontáneas<br>" +
+        "• gonna en inglés hablado informal<br>" +
+        "• listening sin texto<br>" +
+        "• speaking con respuestas propias";
+
+    feedback.className =
+        "feedback success";
+};
+
+</script>
+
+</body>
+</html>
