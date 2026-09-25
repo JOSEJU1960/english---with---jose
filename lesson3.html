@@ -644,32 +644,54 @@ document.getElementById("checkConversation").onclick = function() {
 
     feedback.style.display = "block";
 
-    if (
-        text.includes("going to") ||
-        text.includes("gonna") ||
-        text.includes("i will") ||
-        text.includes("i'll")
-    ) {
+ if (
+    text.includes("going to") ||
+    text.includes("gonna") ||
+    text.includes("i will") ||
+    text.includes("i'll")
+) {
+
+    const missingVerbAfterGoingTo =
+        text.includes("going to out") ||
+        text.includes("going to the cinema") ||
+        text.includes("going to museum") ||
+        text.includes("going to the museum");
+
+    if (missingVerbAfterGoingTo) {
 
         feedback.innerHTML =
-            "✅ Respuesta válida.<br><br>" +
-            "No existe una única respuesta correcta: lo importante es que expreses tu propio plan.";
+            "👍 Entiendo tu plan y has intentado utilizar <b>going to</b>.<br><br>" +
+            "⚠️ Pero hay algo que mejorar: después de <b>going to</b> necesitamos un verbo.<br><br>" +
+            "Por ejemplo:<br>" +
+            "❌ I'm going to out to the cinema.<br>" +
+            "✅ I'm going to <b>go</b> to the cinema.<br><br>" +
+            "❌ I'm going to museum.<br>" +
+            "✅ I'm going to <b>go to the museum</b>.";
+
+        feedback.className =
+            "feedback";
+
+    } else {
+
+        feedback.innerHTML =
+            "✅ Has utilizado una estructura de futuro adecuada para este ejercicio.<br><br>" +
+            "La app ha entendido tu plan. Recuerda: esta comprobación todavía no garantiza que toda la frase esté libre de errores.";
 
         feedback.className =
             "feedback success";
 
         completeStep(6);
-
-    } else {
-
-        feedback.innerHTML =
-            "Tu respuesta puede ser perfectamente válida en otro contexto, " +
-            "pero aquí estamos practicando el futuro.<br><br>" +
-            "Prueba, por ejemplo, comenzando con <b>I'm going to...</b>";
-
-        feedback.className =
-            "feedback";
     }
+
+} else {
+
+    feedback.innerHTML =
+        "Entiendo que estás intentando responder, pero aquí estamos practicando formas de futuro.<br><br>" +
+        "Prueba expresando tu plan con <b>I'm going to...</b> o una forma adecuada con <b>will</b>.";
+
+    feedback.className =
+        "feedback";
+}  
 };
 
 
