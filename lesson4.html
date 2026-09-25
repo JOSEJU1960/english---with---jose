@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>English with Jose - Lesson 4</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    color: #222;
+}
+
+header {
+    background: #183153;
+    color: white;
+    padding: 22px;
+    text-align: center;
+}
+
+.container {
+    max-width: 760px;
+    margin: auto;
+    padding: 18px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h2 {
+    color: #183153;
+}
+
+button {
+    background: #183153;
+    color: white;
+    border: none;
+    padding: 11px 16px;
+    margin: 5px 4px 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    opacity: 0.88;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.feedback {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fff3cd;
+    border-radius: 8px;
+    display: none;
+}
+
+.success {
+    background: #d4edda;
+}
+
+.dialogue {
+    line-height: 1.8;
+    background: #f7f9fb;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.rule {
+    background: #eef4ff;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 85px;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.progress {
+    height: 14px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#bar {
+    height: 100%;
+    width: 0%;
+    background: #183153;
+    transition: width 0.4s;
+}
+
+.small {
+    color: #555;
+    font-size: 14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🇬🇧 English with Jose</h1>
+
+<h2 style="color:white;">
+Lesson 4 · When and where? 📍🕒
+</h2>
+
+<p>A1–A2 · Listening + Speaking · IN / ON / AT</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Progreso</h2>
+
+<div class="progress">
+<div id="bar"></div>
+</div>
+
+<p id="progressText">
+Progreso: 0 de 7 pasos
+</p>
+
+</div>
+
+
+<!-- PASO 1 -->
+
+<div class="card">
+
+<h2>1. 🎧 Primero escucha</h2>
+
+<p>
+No leas todavía la conversación.
+Escucha e intenta comprender la idea general.
+</p>
+
+<button id="firstListen">
+▶ Escuchar conversación
+</button>
+
+<p><b>Pregunta:</b></p>
+
+<p>
+Where are Jose and his family going to meet?
+</p>
+
+<button class="option placeOption" data-answer="restaurant">
+At the restaurant
+</button>
+
+<button class="option placeOption" data-answer="station">
+At the station
+</button>
+
+<button class="option placeOption" data-answer="museum">
+At the museum
+</button>
+
+<div id="listenFeedback" class="feedback"></div>
+
+</div>
+
+
+<!-- PASO 2 -->
+
+<div class="card">
+
+<h2>2. 👀 Ahora escucha con el texto</h2>
+
+<button id="normalListen">
+▶ Escuchar normal
+</button>
+
+<button id="slowListen">
+🐢 Escuchar despacio
+</button>
+
+<div class="dialogue">
+
+<p>
+<b>Anna:</b>
+What are you going to do <b>on Saturday</b>?
+</p>
+
+<p>
+<b>Jose:</b>
+I'm going to go out with my family.
+</p>
+
+<p>
+<b>Anna:</b>
+What time?
+</p>
+
+<p>
+<b>Jose:</b>
+<b>At seven</b> in the evening.
+</p>
+
+<p>
+<b>Anna:</b>
+Where are you going to meet?
+</p>
+
+<p>
+<b>Jose:</b>
+<b>At the station</b>.
+Then we're going to have dinner
+<b>in the city centre</b>.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- PASO 3 -->
+
+<div class="card">
+
+<h2>3. 🧠 IN, ON o AT?</h2>
+
+<p>
+No intentes memorizar veinte reglas.
+Empezamos por las más útiles.
+</p>
+
+<div class="rule">
+
+<b>AT → momento concreto</b>
+
+<p>
+at seven<br>
+at 8:30<br>
+at night
+</p>
+
+</div>
+
+<div class="rule">
+
+<b>ON → día o fecha</b>
+
+<p>
+on Saturday<br>
+on Monday<br>
+on 25 September
+</p>
+
+</div>
+
+<div class="rule">
+
+<b>IN → periodo más amplio</b>
+
+<p>
+in September<br>
+in 2026<br>
+in the morning<br>
+in the evening
+</p>
+
+</div>
+
+<p><b>Completa:</b></p>
+
+<p>
+I'm going to meet my friends ___ Friday.
+</p>
+
+<button class="timeOption" data-answer="in">
+IN
+</button>
+
+<button class="timeOption" data-answer="on">
+ON
+</button>
+
+<button class="timeOption" data-answer="at">
+AT
+</button>
+
+<div id="timeFeedback" class="feedback"></div>
+
+</div>
+
+
+<!-- PASO 4 -->
+
+<div class="card">
+
+<h2>4. 📍 También sirven para lugares</h2>
+
+<div class="rule">
+
+<b>AT → un punto o lugar</b>
+
+<p>
+at the station<br>
+at the hotel<br>
+at the bus stop
+</p>
+
+</div>
+
+<div class="rule">
+
+<b>IN → dentro de un espacio o zona</b>
+
+<p>
+in the restaurant<br>
+in the city centre<br>
+in Madrid
+</p>
+
+</div>
+
+<div class="rule">
+
+<b>ON → sobre una superficie</b>
+
+<p>
+on the table<br>
+on the wall<br>
+on the floor
+</p>
+
+</div>
+
+<p><b>Completa:</b></p>
+
+<p>
+My phone is ___ the table.
+</p>
+
+<button class="locationOption" data-answer="in">
+IN
+</button>
+
+<button class="locationOption" data-answer="on">
+ON
+</button>
+
+<button class="locationOption" data-answer="at">
+AT
+</button>
+
+<div id="locationFeedback" class="feedback"></div>
+
+</div>
+
+
+<!-- PASO 5 -->
+
+<div class="card">
+
+<h2>5. 👂 Así lo vas a oír</h2>
+
+<p>
+En una conversación real puedes encontrarte:
+</p>
+
+<p>
+<b>I'm going to go out tonight.</b>
+</p>
+
+<button id="goingToAudio">
+🔊 Escuchar
+</button>
+
+<p>
+Y de manera informal:
+</p>
+
+<p>
+<b>I'm gonna go out tonight.</b>
+</p>
+
+<button id="gonnaAudio">
+🔊 Escuchar
+</button>
+
+<div class="rule">
+
+<b>going to → gonna</b>
+
+<p>
+La segunda forma es muy frecuente al hablar.
+Conviene reconocerla al escuchar.
+</p>
+
+</div>
+
+<p class="small">
+No necesitas utilizar “gonna” para hablar correctamente.
+Lo importante ahora es que puedas reconocerla.
+</p>
+
+</div>
+
+
+<!-- PASO 6 -->
+
+<div class="card">
+
+<h2>6. 🎤 Speaking libre</h2>
+
+<p>
+Responde en inglés:
+</p>
+
+<p>
+<b>What are you going to do on Saturday?</b>
+</p>
+
+<p>
+Puedes decir lo que realmente quieras.
+</p>
+
+<button id="speakBtn">
+🎙️ Hablar
+</button>
+
+<p id="voiceStatus"></p>
+
+<div id="voiceFeedback" class="feedback"></div>
+
+</div>
+
+
+<!-- PASO 7 -->
+
+<div class="card">
+
+<h2>7. 💬 When and where?</h2>
+
+<p>
+Imagina que vas a quedar con alguien.
+Escribe <b>cuándo</b> y <b>dónde</b>.
+</p>
+
+<p>
+Ejemplo:
+</p>
+
+<p>
+<i>
+I'm going to meet my friends on Saturday
+at seven at the station.
+</i>
+</p>
+
+<p>
+Pero utiliza tu propia frase.
+</p>
+
+<textarea
+id="conversation"
+placeholder="Write your plan here...">
+</textarea>
+
+<button id="checkConversation">
+Comprobar
+</button>
+
+<div id="conversationFeedback" class="feedback"></div>
+
+</div>
+
+
+<!-- EXTRA -->
+
+<div class="card">
+
+<h2>💡 Phrasal verb de hoy</h2>
+
+<p>
+<b>GO OUT</b> = salir
+</p>
+
+<p>
+I'm going to <b>go out</b> with my family.
+</p>
+
+<p>
+Fíjate en la estructura:
+</p>
+
+<p>
+<b>going to + go out</b>
+</p>
+
+<p>
+Por eso:
+</p>
+
+<p>
+❌ I'm going to out with my family.<br>
+✅ I'm going to <b>go out</b> with my family.
+</p>
+
+</div>
+
+
+<script>
+
+const dialogue =
+"What are you going to do on Saturday? " +
+"I'm going to go out with my family. " +
+"What time? " +
+"At seven in the evening. " +
+"Where are you going to meet? " +
+"At the station. " +
+"Then we're going to have dinner in the city centre.";
+
+let completed = new Set();
+
+
+function speak(text, rate = 0.82) {
+
+    if (!("speechSynthesis" in window)) {
+
+        alert(
+            "Tu navegador no permite síntesis de voz."
+        );
+
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const u =
+        new SpeechSynthesisUtterance(text);
+
+    u.lang = "en-GB";
+    u.rate = rate;
+    u.volume = 1;
+
+    window.speechSynthesis.speak(u);
+}
+
+
+function completeStep(n) {
+
+    completed.add(n);
+
+    document.getElementById("bar").style.width =
+        ((completed.size / 7) * 100) + "%";
+
+    document.getElementById("progressText").textContent =
+        "Progreso: " +
+        completed.size +
+        " de 7 pasos";
+}
+
+
+function createRecognition(callback) {
+
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!Recognition) return null;
+
+    const recognition =
+        new Recognition();
+
+    recognition.lang = "en-GB";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult =
+        function(event) {
+
+            callback(
+                event.results[0][0].transcript
+            );
+        };
+
+    return recognition;
+}
+
+
+/* PASO 1 */
+
+document.getElementById("firstListen").onclick =
+function() {
+
+    speak(dialogue);
+
+};
+
+
+document.querySelectorAll(".placeOption")
+.forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById(
+                "listenFeedback"
+            );
+
+        feedback.style.display = "block";
+
+        if (
+            button.dataset.answer === "station"
+        ) {
+
+            feedback.innerHTML =
+                "✅ Correct! They are going to meet <b>at the station</b>.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(1);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ Not quite. Listen again. Where are they going to meet?";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 2 */
+
+document.getElementById("normalListen").onclick =
+function() {
+
+    speak(dialogue, 0.82);
+
+    completeStep(2);
+};
+
+
+document.getElementById("slowListen").onclick =
+function() {
+
+    speak(dialogue, 0.58);
+
+};
+
+
+/* PASO 3 */
+
+document.querySelectorAll(".timeOption")
+.forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById(
+                "timeFeedback"
+            );
+
+        feedback.style.display = "block";
+
+        if (
+            button.dataset.answer === "on"
+        ) {
+
+            feedback.innerHTML =
+                "✅ Correct! <b>On Friday</b>. Usamos ON con días.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(3);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ Recuerda: con los días normalmente usamos <b>ON</b>.";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 4 */
+
+document.querySelectorAll(".locationOption")
+.forEach(function(button) {
+
+    button.onclick = function() {
+
+        const feedback =
+            document.getElementById(
+                "locationFeedback"
+            );
+
+        feedback.style.display = "block";
+
+        if (
+            button.dataset.answer === "on"
+        ) {
+
+            feedback.innerHTML =
+                "✅ Correct! The phone is <b>on the table</b>.";
+
+            feedback.className =
+                "feedback success";
+
+            completeStep(4);
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ Piensa en una superficie: <b>on the table</b>.";
+
+            feedback.className =
+                "feedback";
+        }
+    };
+});
+
+
+/* PASO 5 */
+
+document.getElementById("goingToAudio").onclick =
+function() {
+
+    speak(
+        "I'm going to go out tonight.",
+        0.80
+    );
+
+    completeStep(5);
+};
+
+
+document.getElementById("gonnaAudio").onclick =
+function() {
+
+    speak(
+        "I'm gonna go out tonight.",
+        0.88
+    );
+
+    completeStep(5);
+};
+
+
+/* PASO 6 */
+
+document.getElementById("speakBtn").onclick =
+function() {
+
+    const status =
+        document.getElementById(
+            "voiceStatus"
+        );
+
+    const feedback =
+        document.getElementById(
+            "voiceFeedback"
+        );
+
+    const recognition =
+        createRecognition(function(text) {
+
+            status.innerHTML =
+                'El micrófono ha entendido: <b>"' +
+                text +
+                '"</b>';
+
+            feedback.style.display =
+                "block";
+
+            const heard =
+                text.toLowerCase();
+
+            if (
+                heard.includes("going to") ||
+                heard.includes("gonna") ||
+                heard.includes("i will") ||
+                heard.includes("i'll")
+            ) {
+
+                const missingVerb =
+                    heard.includes("going to out") ||
+                    heard.includes("gonna out");
+
+                if (missingVerb) {
+
+                    feedback.innerHTML =
+                        "👍 Entiendo lo que quieres decir.<br><br>" +
+                        "⚠️ Recuerda que <b>go out</b> significa salir.<br><br>" +
+                        "❌ I'm going to out.<br>" +
+                        "✅ I'm going to <b>go out</b>.";
+
+                    feedback.className =
+                        "feedback";
+
+                } else {
+
+                    feedback.innerHTML =
+                        "✅ Has expresado un plan utilizando una estructura de futuro adecuada para este ejercicio.<br><br>" +
+                        "Recuerda: el reconocimiento de voz confirma lo que ha entendido el navegador, no que toda tu pronunciación o gramática sean perfectas.";
+
+                    feedback.className =
+                        "feedback success";
+
+                    completeStep(6);
+                }
+
+            } else {
+
+                feedback.innerHTML =
+                    "Te he entendido, pero en este ejercicio estamos practicando planes futuros.<br><br>" +
+                    "Prueba con <b>I'm going to...</b>";
+
+                feedback.className =
+                    "feedback";
+            }
+        });
+
+
+    if (!recognition) {
+
+        status.textContent =
+            "El reconocimiento de voz no está disponible en este navegador.";
+
+        return;
+    }
+
+
+    recognition.onstart =
+        function() {
+
+            status.textContent =
+                "🎙️ Habla ahora...";
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+            status.textContent =
+                event.error === "not-allowed"
+                ? "⚠️ Debes permitir el uso del micrófono."
+                : "No he podido reconocerte. Inténtalo otra vez.";
+        };
+
+
+    recognition.start();
+};
+
+
+/* PASO 7 */
+
+document.getElementById("checkConversation").onclick =
+function() {
+
+    const original =
+        document.getElementById(
+            "conversation"
+        ).value.trim();
+
+    const text =
+        original.toLowerCase();
+
+    const feedback =
+        document.getElementById(
+            "conversationFeedback"
+        );
+
+    feedback.style.display =
+        "block";
+
+
+    if (!text) {
+
+        feedback.innerHTML =
+            "Escribe primero tu plan.";
+
+        feedback.className =
+            "feedback";
+
+        return;
+    }
+
+
+    const hasTimePreposition =
+        text.includes(" on ") ||
+        text.includes(" at ") ||
+        text.includes(" in ");
+
+    const hasFuture =
+        text.includes("going to") ||
+        text.includes("gonna") ||
+        text.includes("i will") ||
+        text.includes("i'll");
+
+
+    if (
+        hasTimePreposition &&
+        hasFuture
+    ) {
+
+        feedback.innerHTML =
+            '✅ La app ha entendido tu plan:<br><br>' +
+            '<b>"' + original + '"</b><br><br>' +
+            "Has utilizado una estructura de futuro y al menos una de las preposiciones que estamos practicando.<br><br>" +
+            "⚠️ Esta comprobación todavía no garantiza que toda la frase sea gramaticalmente perfecta.";
+
+        feedback.className =
+            "feedback success";
+
+        completeStep(7);
+
+    } else {
+
+        feedback.innerHTML =
+            "Entiendo que estás intentando expresar tu plan, pero intenta incluir:<br><br>" +
+            "• una forma de futuro: <b>going to</b><br>" +
+            "• cuándo o dónde: <b>in / on / at</b>";
+
+        feedback.className =
+            "feedback";
+    }
+};
+
+</script>
+
+</div>
+
+</body>
+</html>
