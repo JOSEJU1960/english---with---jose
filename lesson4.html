@@ -493,7 +493,72 @@ Comprobar
 
 </div>
 
+<!-- TRANSPORTES -->
 
+<div class="card">
+
+<h2>🚗🚌 IN u ON con transportes</h2>
+
+<p>
+Aquí la idea de “dentro” puede engañarnos.
+En inglés normalmente decimos:
+</p>
+
+<div class="rule">
+
+<b>IN → coche y taxi</b>
+
+<p>
+in the car<br>
+in a taxi
+</p>
+
+<p>
+👉 get <b>in</b> the car<br>
+👉 get <b>out of</b> the car
+</p>
+
+</div>
+
+<div class="rule">
+
+<b>ON → transporte público o vehículos grandes</b>
+
+<p>
+on the bus<br>
+on the train<br>
+on the plane<br>
+on the ferry
+</p>
+
+<p>
+👉 get <b>on</b> the train<br>
+👉 get <b>off</b> the train
+</p>
+
+</div>
+
+<p><b>Elige la opción correcta:</b></p>
+
+<p>
+We're ___ the train to Madrid.
+</p>
+
+<button class="transportOption" data-answer="in">
+IN
+</button>
+
+<button class="transportOption" data-answer="on">
+ON
+</button>
+
+<button class="transportOption" data-answer="at">
+AT
+</button>
+
+<div id="transportFeedback" class="feedback"></div>
+
+</div>
 <!-- EXTRA -->
 
 <div class="card">
@@ -953,7 +1018,37 @@ function() {
             "feedback";
     }
 };
+document.querySelectorAll(".transportOption").forEach(function(button) {
 
+    button.addEventListener("click", function() {
+
+        const feedback =
+            document.getElementById("transportFeedback");
+
+        feedback.style.display = "block";
+
+        if (button.dataset.answer === "on") {
+
+            feedback.innerHTML =
+                "✅ Correct! <b>We're on the train to Madrid.</b><br><br>" +
+                "Con trenes, autobuses, aviones y ferris normalmente usamos <b>ON</b>.";
+
+            feedback.className =
+                "feedback success";
+
+        } else {
+
+            feedback.innerHTML =
+                "❌ En este caso usamos <b>ON</b>.<br><br>" +
+                "✅ <b>We're on the train to Madrid.</b><br><br>" +
+                "Recuerda: <b>in a car / in a taxi</b>, pero " +
+                "<b>on a bus / on a train / on a plane / on a ferry</b>.";
+
+            feedback.className =
+                "feedback";
+        }
+    });
+});
 </script>
 
 </div>
