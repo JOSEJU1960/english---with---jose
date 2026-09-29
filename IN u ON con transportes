@@ -558,7 +558,34 @@ AT
 
 <div id="transportFeedback" class="feedback"></div>
 
-</div>
+<hr>
+
+<p><b>Ahora prueba estas situaciones:</b></p>
+
+<p>1. She's ___ a taxi.</p>
+<button class="transportQuiz" data-correct="in">IN</button>
+<button class="transportQuiz" data-correct="on">ON</button>
+<div class="transportResult"></div>
+
+<p>2. They're ___ the bus.</p>
+<button class="transportQuiz" data-correct="on">IN</button>
+<button class="transportQuiz" data-correct="in">ON</button>
+<div class="transportResult"></div>
+
+<p>3. We're ___ the car.</p>
+<button class="transportQuiz" data-correct="in">IN</button>
+<button class="transportQuiz" data-correct="on">ON</button>
+<div class="transportResult"></div>
+
+<p>4. Jose is ___ the plane.</p>
+<button class="transportQuiz" data-correct="on">IN</button>
+<button class="transportQuiz" data-correct="in">ON</button>
+<div class="transportResult"></div>
+
+<p>5. Anna is ___ the train.</p>
+<button class="transportQuiz" data-correct="on">IN</button>
+<button class="transportQuiz" data-correct="in">ON</button>
+<div class="transportResult"></div></div>
 <!-- EXTRA -->
 
 <div class="card">
@@ -1046,6 +1073,31 @@ document.querySelectorAll(".transportOption").forEach(function(button) {
 
             feedback.className =
                 "feedback";
+        }
+    });
+});document.querySelectorAll(".transportQuiz").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        let result = button.nextElementSibling;
+
+while (result && !result.classList.contains("transportResult")) {
+    result = result.nextElementSibling;
+}
+        if (button.textContent.trim().toLowerCase() === button.dataset.correct) {
+
+            result.innerHTML = "✅ Correct!";
+            result.className = "transportResult feedback success";
+            result.style.display = "block";
+
+        } else {
+
+            result.innerHTML =
+                "❌ Try again. Think: <b>car/taxi → IN</b> · " +
+                "<b>bus/train/plane → ON</b>";
+
+            result.className = "transportResult feedback";
+            result.style.display = "block";
         }
     });
 });
