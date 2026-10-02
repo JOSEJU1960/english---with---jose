@@ -1074,19 +1074,40 @@ document.querySelectorAll(".transportOption").forEach(function(button) {
                 "feedback";
         }
     });
-});document.querySelectorAll(".transportQuiz").forEach(function(button) {
+document.querySelectorAll(".transportQuiz").forEach(function(button) {
 
     button.addEventListener("click", function() {
 
         let result = button.nextElementSibling;
 
-while (result && !result.classList.contains("transportResult")) {
-    result = result.nextElementSibling;
-}
-        if (button.textContent.trim().toLowerCase() === button.dataset.correct) {
+        while (result && !result.classList.contains("transportResult")) {
+            result = result.nextElementSibling;
+        }
+
+        const question = button.parentElement;
+        const buttons = Array.from(
+            question.querySelectorAll(".transportQuiz")
+        );
+
+        const index = buttons.indexOf(button);
+        const questionNumber = Math.floor(index / 2) + 1;
+
+        const correctAnswers = {
+            1: "in",
+            2: "on",
+            3: "in",
+            4: "on",
+            5: "on"
+        };
+
+        const answer =
+            button.textContent.trim().toLowerCase();
+
+        if (answer === correctAnswers[questionNumber]) {
 
             result.innerHTML = "✅ Correct!";
-            result.className = "transportResult feedback success";
+            result.className =
+                "transportResult feedback success";
             result.style.display = "block";
 
         } else {
@@ -1095,7 +1116,8 @@ while (result && !result.classList.contains("transportResult")) {
                 "❌ Try again. Think: <b>car/taxi → IN</b> · " +
                 "<b>bus/train/plane → ON</b>";
 
-            result.className = "transportResult feedback";
+            result.className =
+                "transportResult feedback";
             result.style.display = "block";
         }
     });
