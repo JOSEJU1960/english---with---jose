@@ -448,7 +448,14 @@ Puedes decir lo que realmente quieras.
 </button>
 
 <p id="voiceStatus"></p>
+<p><b>Revisa o corrige lo que ha entendido el micrófono:</b></p>
 
+<textarea id="speakingText"
+placeholder="Aquí aparecerá tu frase. También puedes escribirla directamente."></textarea>
+
+<button id="analyzeSpeaking">
+✏️ Analizar mi frase
+</button>
 <div id="voiceFeedback" class="feedback"></div>
 
 </div>
@@ -869,143 +876,15 @@ function() {
 document.getElementById("speakBtn").onclick = function() {
 
     const status = document.getElementById("voiceStatus");
-    const feedback = document.getElementById("voiceFeedback");
 
     const recognition = createRecognition(function(text) {
 
-        status.textContent = 'El micrófono ha entendido: "' + text + '"';
+        status.textContent =
+            'El micrófono ha entendido: "' + text + '"';
 
-        feedback.style.display = "block";
+        document.getElementById("speakingText").value = text;
 
-        const heard = text.toLowerCase().trim();
-        let corrected = text;
-        let explanation = "";
-        let errorFound = false;
-
-        // Errores frecuentes con verbos irregulares
-        const corrections = [
-            {
-                pattern: /\btaked\b/gi,
-                replacement: "took",
-                explanation: "El pasado de TAKE es TOOK, no TAKED."
-            },
-            {
-                pattern: /\bgoed\b/gi,
-                replacement: "went",
-                explanation: "El pasado de GO es WENT, no GOED."
-            },
-            {
-                pattern: /\bbuyed\b/gi,
-                replacement: "bought",
-                explanation: "El pasado de BUY es BOUGHT, no BUYED."
-            },
-            {
-                pattern: /\bbringed\b/gi,
-                replacement: "brought",
-                explanation: "El pasado de BRING es BROUGHT."
-            }
-        ];
-
-        corrections.forEach(function(item) {
-            if (item.pattern.test(corrected)) {
-                corrected = corrected.replace(
-                    item.pattern,
-                    item.replacement
-                );
-                explanation += "<p>⚠️ " + item.explanation + "</p>";
-                errorFound = true;
-            }
-        });
-
-        // Error frecuente: going to out
-        if (/\bgoing to out\b/i.test(corrected)) {
-            corrected = corrected.replace(
-                /\bgoing to out\b/gi,
-                "going to go out"
-            );
-            explanation +=
-                "<p>⚠️ GO OUT significa salir. " +
-                "Después de GOING TO necesitamos un verbo.</p>";
-            errorFound = true;
-        }
-
-        if (/\bgonna out\b/i.test(corrected)) {
-            corrected = corrected.replace(
-                /\bgonna out\b/gi,
-                "gonna go out"
-            );
-            explanation +=
-                "<p>⚠️ Después de GONNA necesitamos un verbo. " +
-                "Decimos GONNA GO OUT.</p>";
-            errorFound = true;
-        }
-
-        // Comprobación del futuro
-        const hasFuture =
-            /\bgoing to\b/i.test(corrected) ||
-            /\bgonna\b/i.test(corrected) ||
-            /\bi will\b/i.test(corrected) ||
-            /\bi'll\b/i.test(corrected);
-
-        let message = "";
-
-        if (errorFound) {
-
-            message =
-                "<p>👍 He entendido tu frase, pero he detectado " +
-                "un posible error.</p>" +
-                explanation +
-                "<p>✅ <b>Corrección propuesta:</b><br>" +
-                corrected + "</p>";
-
-            feedback.className = "feedback";
-
-        } else if (hasFuture) {
-
-            message =
-                "<p>✅ Has utilizado una estructura de futuro " +
-                "adecuada para este ejercicio.</p>" +
-                "<p><b>Tu frase:</b><br>" + text + "</p>" +
-                "<p>💡 No he detectado errores de los que " +
-                "este ejercicio sabe comprobar. " +
-                "Esto no garantiza que toda la frase sea correcta.</p>";
-
-            feedback.className = "feedback success";
-            completeStep(6);
-
-        } else {
-
-            message =
-                "<p>👍 He reconocido tu frase:</p>" +
-                "<p><b>" + text + "</b></p>" +
-                "<p>En este ejercicio estamos practicando " +
-                "planes futuros.</p>" +
-                "<p>Prueba a utilizar <b>I'm going to...</b></p>";
-
-            feedback.className = "feedback";
-        }
-
-        feedback.innerHTML = message;
-
-        // Botón para escuchar la frase
-        const listenButton = document.createElement("button");
-        listenButton.textContent = "🔊 Escuchar frase";
-
-        listenButton.onclick = function() {
-            speak(corrected, 0.78);
-        };
-
-        feedback.appendChild(listenButton);
-
-        // Botón para volver a practicar
-        const retryButton = document.createElement("button");
-        retryButton.textContent = "🎤 Volver a intentarlo";
-
-        retryButton.onclick = function() {
-            document.getElementById("speakBtn").click();
-        };
-
-        feedback.appendChild(retryButton);
+        analyzeSpeaking(text);
     });
 
     if (!recognition) {
@@ -1026,6 +905,191 @@ document.getElementById("speakBtn").onclick = function() {
     recognition.start();
 };
 
+
+// ANALIZAR FRASES ESCRITAS O RECONOCIDAS
+
+document.getElementById("analyzeSpeaking").onclick = function() {
+
+    const text = document.getElementById("speakingText").value.trim();
+
+    if (!text) {
+        alert("Primero habla o escribe una frase en inglés.");
+        return;
+    }
+
+    analyzeSpeaking(text);
+};
+
+
+function analyzeSpeaking(text) {
+
+    const feedback = document.getElementById("voiceFeedback");
+
+    feedback.style.display = "block";
+
+    let corrected = text;
+    let explanation = "";
+    let errorFound = false;
+
+    // ERRORES FRECUENTES CON VERBOS IRREGULARES
+
+    const corrections = [
+        {
+            pattern: /\btaked\b/gi,
+            replacement: "took",
+            explanation: "El pasado de TAKE es TOOK, no TAKED."
+        },
+        {
+            pattern: /\bgoed\b/gi,
+            replacement: "went",
+            explanation: "El pasado de GO es WENT, no GOED."
+        },
+        {
+            pattern: /\bbuyed\b/gi,
+            replacement: "bought",
+            explanation: "El pasado de BUY es BOUGHT, no BUYED."
+        },
+        {
+            pattern: /\bbringed\b/gi,
+            replacement: "brought",
+            explanation: "El pasado de BRING es BROUGHT, no BRINGED."
+        }
+    ];
+
+    corrections.forEach(function(item) {
+
+        if (item.pattern.test(corrected)) {
+
+            corrected = corrected.replace(
+                item.pattern,
+                item.replacement
+            );
+
+            explanation +=
+                "<p>⚠️ " + item.explanation + "</p>";
+
+            errorFound = true;
+        }
+    });
+
+
+    // ERROR: GOING TO OUT
+
+    if (/\bgoing to out\b/i.test(corrected)) {
+
+        corrected = corrected.replace(
+            /\bgoing to out\b/gi,
+            "going to go out"
+        );
+
+        explanation +=
+            "<p>⚠️ Después de GOING TO necesitamos un verbo. " +
+            "GO OUT significa salir.</p>";
+
+        errorFound = true;
+    }
+
+
+    // ERROR: GONNA OUT
+
+    if (/\bgonna out\b/i.test(corrected)) {
+
+        corrected = corrected.replace(
+            /\bgonna out\b/gi,
+            "gonna go out"
+        );
+
+        explanation +=
+            "<p>⚠️ Después de GONNA necesitamos un verbo.</p>";
+
+        errorFound = true;
+    }
+
+
+    // COMPROBAR ESTRUCTURAS DE FUTURO
+
+    const hasFuture =
+        /\bgoing to\b/i.test(corrected) ||
+        /\bgonna\b/i.test(corrected) ||
+        /\bi will\b/i.test(corrected) ||
+        /\bi'll\b/i.test(corrected);
+
+
+    let message = "";
+
+    if (errorFound) {
+
+        message =
+            "<p>👍 He entendido tu frase, pero he detectado " +
+            "un posible error.</p>" +
+            explanation +
+            "<p>✅ <b>Corrección propuesta:</b></p>";
+
+        feedback.className = "feedback";
+
+    } else if (hasFuture) {
+
+        message =
+            "<p>✅ Has utilizado una estructura de futuro " +
+            "adecuada para este ejercicio.</p>" +
+            "<p>💡 No he detectado errores de los que " +
+            "este corrector sabe comprobar.</p>";
+
+        feedback.className = "feedback success";
+
+        completeStep(6);
+
+    } else {
+
+        message =
+            "<p>👍 He recibido tu frase.</p>" +
+            "<p>En esta lección estamos practicando " +
+            "planes futuros, pero también puedes escribir " +
+            "frases en otros tiempos verbales.</p>" +
+            "<p>💡 El corrector solo detecta algunos " +
+            "errores frecuentes.</p>";
+
+        feedback.className = "feedback";
+    }
+
+
+    // MOSTRAR LA FRASE SIN INTERPRETARLA COMO HTML
+
+    feedback.innerHTML = message;
+
+    const sentence = document.createElement("p");
+    const strong = document.createElement("b");
+
+    strong.textContent = corrected;
+    sentence.appendChild(strong);
+    feedback.appendChild(sentence);
+
+
+    // BOTÓN ESCUCHAR
+
+    const listenButton = document.createElement("button");
+
+    listenButton.textContent = "🔊 Escuchar frase";
+
+    listenButton.onclick = function() {
+        speak(corrected, 0.78);
+    };
+
+    feedback.appendChild(listenButton);
+
+
+    // BOTÓN REPETIR
+
+    const retryButton = document.createElement("button");
+
+    retryButton.textContent = "🎤 Volver a intentarlo";
+
+    retryButton.onclick = function() {
+        document.getElementById("speakBtn").click();
+    };
+
+    feedback.appendChild(retryButton);
+}
 /* PASO 7 */
 
 document.getElementById("checkConversation").onclick =
