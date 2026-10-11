@@ -866,110 +866,165 @@ function() {
 
 
 /* PASO 6 */
+document.getElementById("speakBtn").onclick = function() {
 
-document.getElementById("speakBtn").onclick =
-function() {
+    const status = document.getElementById("voiceStatus");
+    const feedback = document.getElementById("voiceFeedback");
 
-    const status =
-        document.getElementById(
-            "voiceStatus"
-        );
+    const recognition = createRecognition(function(text) {
 
-    const feedback =
-        document.getElementById(
-            "voiceFeedback"
-        );
+        status.textContent = 'El micrófono ha entendido: "' + text + '"';
 
-    const recognition =
-        createRecognition(function(text) {
+        feedback.style.display = "block";
 
-            status.innerHTML =
-                'El micrófono ha entendido: <b>"' +
-                text +
-                '"</b>';
+        const heard = text.toLowerCase().trim();
+        let corrected = text;
+        let explanation = "";
+        let errorFound = false;
 
-            feedback.style.display =
-                "block";
+        // Errores frecuentes con verbos irregulares
+        const corrections = [
+            {
+                pattern: /\btaked\b/gi,
+                replacement: "took",
+                explanation: "El pasado de TAKE es TOOK, no TAKED."
+            },
+            {
+                pattern: /\bgoed\b/gi,
+                replacement: "went",
+                explanation: "El pasado de GO es WENT, no GOED."
+            },
+            {
+                pattern: /\bbuyed\b/gi,
+                replacement: "bought",
+                explanation: "El pasado de BUY es BOUGHT, no BUYED."
+            },
+            {
+                pattern: /\bbringed\b/gi,
+                replacement: "brought",
+                explanation: "El pasado de BRING es BROUGHT."
+            }
+        ];
 
-            const heard =
-                text.toLowerCase();
-
-            if (
-                heard.includes("going to") ||
-                heard.includes("gonna") ||
-                heard.includes("i will") ||
-                heard.includes("i'll")
-            ) {
-
-                const missingVerb =
-                    heard.includes("going to out") ||
-                    heard.includes("gonna out");
-
-                if (missingVerb) {
-
-                    feedback.innerHTML =
-                        "👍 Entiendo lo que quieres decir.<br><br>" +
-                        "⚠️ Recuerda que <b>go out</b> significa salir.<br><br>" +
-                        "❌ I'm going to out.<br>" +
-                        "✅ I'm going to <b>go out</b>.";
-
-                    feedback.className =
-                        "feedback";
-
-                } else {
-
-                    feedback.innerHTML =
-                        "✅ Has expresado un plan utilizando una estructura de futuro adecuada para este ejercicio.<br><br>" +
-                        "Recuerda: el reconocimiento de voz confirma lo que ha entendido el navegador, no que toda tu pronunciación o gramática sean perfectas.";
-
-                    feedback.className =
-                        "feedback success";
-
-                    completeStep(6);
-                }
-
-            } else {
-
-                feedback.innerHTML =
-                    "Te he entendido, pero en este ejercicio estamos practicando planes futuros.<br><br>" +
-                    "Prueba con <b>I'm going to...</b>";
-
-                feedback.className =
-                    "feedback";
+        corrections.forEach(function(item) {
+            if (item.pattern.test(corrected)) {
+                corrected = corrected.replace(
+                    item.pattern,
+                    item.replacement
+                );
+                explanation += "<p>⚠️ " + item.explanation + "</p>";
+                errorFound = true;
             }
         });
 
+        // Error frecuente: going to out
+        if (/\bgoing to out\b/i.test(corrected)) {
+            corrected = corrected.replace(
+                /\bgoing to out\b/gi,
+                "going to go out"
+            );
+            explanation +=
+                "<p>⚠️ GO OUT significa salir. " +
+                "Después de GOING TO necesitamos un verbo.</p>";
+            errorFound = true;
+        }
+
+        if (/\bgonna out\b/i.test(corrected)) {
+            corrected = corrected.replace(
+                /\bgonna out\b/gi,
+                "gonna go out"
+            );
+            explanation +=
+                "<p>⚠️ Después de GONNA necesitamos un verbo. " +
+                "Decimos GONNA GO OUT.</p>";
+            errorFound = true;
+        }
+
+        // Comprobación del futuro
+        const hasFuture =
+            /\bgoing to\b/i.test(corrected) ||
+            /\bgonna\b/i.test(corrected) ||
+            /\bi will\b/i.test(corrected) ||
+            /\bi'll\b/i.test(corrected);
+
+        let message = "";
+
+        if (errorFound) {
+
+            message =
+                "<p>👍 He entendido tu frase, pero he detectado " +
+                "un posible error.</p>" +
+                explanation +
+                "<p>✅ <b>Corrección propuesta:</b><br>" +
+                corrected + "</p>";
+
+            feedback.className = "feedback";
+
+        } else if (hasFuture) {
+
+            message =
+                "<p>✅ Has utilizado una estructura de futuro " +
+                "adecuada para este ejercicio.</p>" +
+                "<p><b>Tu frase:</b><br>" + text + "</p>" +
+                "<p>💡 No he detectado errores de los que " +
+                "este ejercicio sabe comprobar. " +
+                "Esto no garantiza que toda la frase sea correcta.</p>";
+
+            feedback.className = "feedback success";
+            completeStep(6);
+
+        } else {
+
+            message =
+                "<p>👍 He reconocido tu frase:</p>" +
+                "<p><b>" + text + "</b></p>" +
+                "<p>En este ejercicio estamos practicando " +
+                "planes futuros.</p>" +
+                "<p>Prueba a utilizar <b>I'm going to...</b></p>";
+
+            feedback.className = "feedback";
+        }
+
+        feedback.innerHTML = message;
+
+        // Botón para escuchar la frase
+        const listenButton = document.createElement("button");
+        listenButton.textContent = "🔊 Escuchar frase";
+
+        listenButton.onclick = function() {
+            speak(corrected, 0.78);
+        };
+
+        feedback.appendChild(listenButton);
+
+        // Botón para volver a practicar
+        const retryButton = document.createElement("button");
+        retryButton.textContent = "🎤 Volver a intentarlo";
+
+        retryButton.onclick = function() {
+            document.getElementById("speakBtn").click();
+        };
+
+        feedback.appendChild(retryButton);
+    });
 
     if (!recognition) {
-
         status.textContent =
             "El reconocimiento de voz no está disponible en este navegador.";
-
         return;
     }
 
+    recognition.onstart = function() {
+        status.textContent = "🎙️ Habla ahora...";
+    };
 
-    recognition.onstart =
-        function() {
-
-            status.textContent =
-                "🎙️ Habla ahora...";
-        };
-
-
-    recognition.onerror =
-        function(event) {
-
-            status.textContent =
-                event.error === "not-allowed"
-                ? "⚠️ Debes permitir el uso del micrófono."
-                : "No he podido reconocerte. Inténtalo otra vez.";
-        };
-
+    recognition.onerror = function(event) {
+        status.textContent =
+            "No he podido reconocerte. Error: " + event.error;
+    };
 
     recognition.start();
 };
-
 
 /* PASO 7 */
 
