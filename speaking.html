@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>English with Jose - Speaking libre</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    margin: 0;
+}
+
+header {
+    background: #183153;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+.container {
+    max-width: 760px;
+    margin: auto;
+    padding: 18px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h2 {
+    color: #183153;
+}
+
+button {
+    background: #183153;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    margin: 6px 4px 6px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    opacity: 0.88;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 17px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+}
+
+.feedback {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff3cd;
+    border-radius: 8px;
+    display: none;
+    line-height: 1.7;
+}
+
+.success {
+    background: #d4edda;
+}
+
+.small {
+    font-size: 14px;
+    color: #555;
+}
+
+a {
+    color: #183153;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🇬🇧 English with Jose</h1>
+    <h2 style="color:white;">🎤 Speaking libre</h2>
+    <p>Habla · Corrige · Escucha · Repite</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+    <h2>💬 Practica tu inglés</h2>
+
+    <p>
+        Habla sobre cualquier tema.
+        Puedes utilizar presente, pasado o futuro.
+    </p>
+
+    <p>
+        Pulsa el micrófono y di una frase en inglés.
+        También puedes escribirla directamente.
+    </p>
+
+    <button id="speakBtn">🎙️ Hablar</button>
+
+    <p id="voiceStatus" aria-live="polite"></p>
+
+    <p><b>Tu frase:</b></p>
+
+    <textarea id="speakingText"
+    placeholder="Aquí aparecerá lo que diga el micrófono. Puedes corregirlo o escribir directamente."></textarea>
+
+    <br>
+
+    <button id="analyzeBtn">✏️ Analizar mi frase</button>
+
+    <button id="clearBtn">🗑️ Borrar</button>
+
+    <div id="feedback" class="feedback" aria-live="polite"></div>
+
+</div>
+
+
+<div class="card">
+
+    <h2>📚 ¿Qué puedes practicar?</h2>
+
+    <p><b>Pasado:</b></p>
+    <p>I went to the gym yesterday.</p>
+
+    <p><b>Presente:</b></p>
+    <p>I usually go to the gym.</p>
+
+    <p><b>Futuro:</b></p>
+    <p>I'm going to visit my family tomorrow.</p>
+
+    <p class="small">
+        El corrector detecta determinados errores frecuentes.
+        Si no encuentra errores, no significa necesariamente
+        que toda la frase sea correcta.
+    </p>
+
+</div>
+
+<p>
+    <a href="index.html">⬅ Volver a las lecciones</a>
+</p>
+
+</div>
+
+
+<script>
+
+// REPRODUCIR AUDIO
+
+function speak(text, rate = 0.78) {
+
+    if (!("speechSynthesis" in window)) {
+        alert("Tu navegador no permite reproducir voz.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    utterance.lang = "en-GB";
+    utterance.rate = rate;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+
+// RECONOCIMIENTO DE VOZ
+
+document.getElementById("speakBtn").onclick = function() {
+
+    const status = document.getElementById("voiceStatus");
+
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!Recognition) {
+        status.textContent =
+            "El reconocimiento de voz no está disponible en este navegador.";
+        return;
+    }
+
+    const recognition = new Recognition();
+
+    recognition.lang = "en-GB";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+        status.textContent = "🎙️ Habla ahora...";
+    };
+
+    recognition.onresult = function(event) {
+
+        const text = event.results[0][0].transcript;
+
+        document.getElementById("speakingText").value = text;
+
+        status.textContent =
+            'El micrófono ha entendido: "' + text + '"';
+
+        analyzeSpeaking(text);
+    };
+
+    recognition.onerror = function(event) {
+        status.textContent =
+            "No he podido reconocerte. Error: " + event.error;
+    };
+
+    recognition.start();
+};
+
+
+// ANALIZAR TEXTO ESCRITO
+
+document.getElementById("analyzeBtn").onclick = function() {
+
+    const text =
+        document.getElementById("speakingText").value.trim();
+
+    if (!text) {
+        alert("Primero habla o escribe una frase.");
+        return;
+    }
+
+    analyzeSpeaking(text);
+};
+
+
+// BORRAR TEXTO
+
+document.getElementById("clearBtn").onclick = function() {
+
+    document.getElementById("speakingText").value = "";
+
+    document.getElementById("feedback").style.display = "none";
+
+    document.getElementById("voiceStatus").textContent = "";
+};
+
+
+// CORRECTOR GRAMATICAL BÁSICO
+
+function analyzeSpeaking(text) {
+
+    const feedback = document.getElementById("feedback");
+
+    feedback.style.display = "block";
+
+    let corrected = text;
+    let explanations = [];
+
+    const rules = [
+
+        {
+            pattern: /\btaked\b/gi,
+            replacement: "took",
+            explanation: "El pasado de TAKE es TOOK, no TAKED."
+        },
+
+        {
+            pattern: /\bgoed\b/gi,
+            replacement: "went",
+            explanation: "El pasado de GO es WENT, no GOED."
+        },
+
+        {
+            pattern: /\bbuyed\b/gi,
+            replacement: "bought",
+            explanation: "El pasado de BUY es BOUGHT, no BUYED."
+        },
+
+        {
+            pattern: /\bbringed\b/gi,
+            replacement: "brought",
+            explanation: "El pasado de BRING es BROUGHT, no BRINGED."
+        },
+
+        {
+            pattern: /\bi go\b(?=[^.!?]*\byesterday\b)/gi,
+            replacement: "I went",
+            explanation:
+                "YESTERDAY indica pasado. El pasado de GO es WENT."
+        },
+
+        {
+            pattern: /\bi take\b(?=[^.!?]*\byesterday\b)/gi,
+            replacement: "I took",
+            explanation:
+                "Con YESTERDAY utilizamos el pasado: TOOK."
+        },
+
+        {
+            pattern: /\bi buy\b(?=[^.!?]*\byesterday\b)/gi,
+            replacement: "I bought",
+            explanation:
+                "El pasado de BUY es BOUGHT."
+        },
+
+        {
+            pattern: /\bi didn't went\b/gi,
+            replacement: "I didn't go",
+            explanation:
+                "Después de DIDN'T utilizamos el verbo en forma base: GO."
+        },
+
+        {
+            pattern: /\bshe go\b/gi,
+            replacement: "she goes",
+            explanation:
+                "En presente simple, con SHE utilizamos GOES."
+        },
+
+        {
+            pattern: /\bhe go\b/gi,
+            replacement: "he goes",
+            explanation:
+                "En presente simple, con HE utilizamos GOES."
+        },
+
+        {
+            pattern: /\bgoing to out\b/gi,
+            replacement: "going to go out",
+            explanation:
+                "Después de GOING TO necesitamos un verbo. GO OUT significa salir."
+        },
+
+        {
+            pattern: /\bgonna out\b/gi,
+            replacement: "gonna go out",
+            explanation:
+                "Después de GONNA necesitamos un verbo."
+        }
+    ];
+
+
+    rules.forEach(function(rule) {
+
+        if (rule.pattern.test(corrected)) {
+
+            corrected = corrected.replace(
+                rule.pattern,
+                rule.replacement
+            );
+
+            explanations.push(rule.explanation);
+        }
+    });
+
+
+    feedback.innerHTML = "";
+
+    const heading = document.createElement("p");
+    const sentence = document.createElement("p");
+    const strong = document.createElement("b");
+
+    strong.textContent = corrected;
+    sentence.appendChild(strong);
+
+    if (explanations.length > 0) {
+
+        heading.textContent =
+            "⚠️ He encontrado posibles errores.";
+
+        feedback.className = "feedback";
+
+    } else {
+
+        heading.textContent =
+            "👍 He recibido tu frase. No he detectado errores de los que sé comprobar.";
+
+        feedback.className = "feedback success";
+    }
+
+    feedback.appendChild(heading);
+
+    if (explanations.length > 0) {
+
+        explanations.forEach(function(explanation) {
+
+            const paragraph = document.createElement("p");
+
+            paragraph.textContent = "💡 " + explanation;
+
+            feedback.appendChild(paragraph);
+        });
+
+        const label = document.createElement("p");
+        label.textContent = "✅ Corrección propuesta:";
+
+        feedback.appendChild(label);
+
+    } else {
+
+        const label = document.createElement("p");
+
+        label.textContent = "Tu frase:";
+
+        feedback.appendChild(label);
+    }
+
+    feedback.appendChild(sentence);
+
+
+    const warning = document.createElement("p");
+
+    warning.className = "small";
+
+    warning.textContent =
+        "Este análisis es limitado. No evalúa directamente tu pronunciación ni garantiza que la frase sea gramaticalmente correcta.";
+
+    feedback.appendChild(warning);
+
+
+    // ESCUCHAR FRASE
+
+    const listenButton = document.createElement("button");
+
+    listenButton.textContent = "🔊 Escuchar frase";
+
+    listenButton.onclick = function() {
+        speak(corrected);
+    };
+
+    feedback.appendChild(listenButton);
+
+
+    // VOLVER A INTENTARLO
+
+    const retryButton = document.createElement("button");
+
+    retryButton.textContent = "🎤 Volver a intentarlo";
+
+    retryButton.onclick = function() {
+        document.getElementById("speakBtn").click();
+    };
+
+    feedback.appendChild(retryButton);
+}
+
+</script>
+
+</body>
+</html>
