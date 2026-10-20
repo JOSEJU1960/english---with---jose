@@ -36,7 +36,15 @@ function addError(text) {
     renderErrors();
   }
 }
+function removeError(text) {
+    const index = errors.indexOf(text);
 
+    if (index !== -1) {
+        errors.splice(index, 1);
+        localStorage.setItem("ewj_errors", JSON.stringify(errors));
+        renderErrors();
+    }
+}
 function renderErrors() {
   const box = document.getElementById("errors");
 
@@ -228,6 +236,7 @@ document.getElementById("repeatSpeakBtn").addEventListener("click", function () 
           "feedback success";
 
         completeStep(5);
+      removeError("Repetición: practicar la presentación completa.");  
       } else {
         feedback.innerHTML =
           'Buen intento. Repite: <b>My name is Jose. I\'m from Spain.</b>';
