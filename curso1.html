@@ -24,7 +24,8 @@
   <p id="traduccionJony" style="display:none;"><strong>Traducción:</strong> ¡Hola! Soy Jony. ¿Cómo te llamas?</p>
 <button onclick="alternarTraduccion()">🇪🇸 Mostrar / ocultar traducción</button>
  <button onclick="escucharRespuesta()">🎤 Hablar con Jony</button>
- <p id="respuestaAlumno"></p> 
+ <p id="respuestaAlumno"></p>
+ <p id="correccionAlumno"></p> 
   <p>Próximamente añadiremos ejercicios interactivos.</p>
 <script>
 function hablarJony(velocidad) {
@@ -78,6 +79,7 @@ function escucharRespuesta() {
   reconocimiento.onresult = function(evento) {
     const texto = evento.results[0][0].transcript;
     resultado.textContent = "🎤 Has dicho: " + texto;
+   comprobarRespuesta(texto); 
   };
 
   reconocimiento.onerror = function(evento) {
@@ -89,6 +91,36 @@ function escucharRespuesta() {
   };
 
   reconocimiento.start();
+}
+function comprobarRespuesta(texto) {
+  const correccion = document.getElementById("correccionAlumno");
+
+  const respuesta = texto
+    .toLowerCase()
+    .trim()
+    .replace(/[.!?]+$/g, "");
+
+  if (/^my name'?s is\b/.test(respuesta)) {
+    correccion.textContent =
+      "❌ Has repetido IS. Puedes decir: My name is Josep o My name's Josep.";
+    return;
+  }
+
+  const nombreCompleto = respuesta.match(/^my name is (.+)$/);
+  const nombreContraido = respuesta.match(/^my name's (.+)$/);
+  const nombreCorto = respuesta.match(/^i'm (.+)$/);
+
+  const nombre = nombreCompleto?.[1] ||
+                 nombreContraido?.[1] ||
+                 nombreCorto?.[1];
+
+  if (nombre) {
+    correccion.textContent =
+      "✅ Correcto. Nice to meet you, " + nombre + "!";
+  } else {
+    correccion.textContent =
+      "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
+  }
 }
 </script>
 </body>
