@@ -23,6 +23,8 @@
 <button onclick="hablarJony(0.7)">🐢 Escuchar lento</button>
   <p id="traduccionJony" style="display:none;"><strong>Traducción:</strong> ¡Hola! Soy Jony. ¿Cómo te llamas?</p>
 <button onclick="alternarTraduccion()">🇪🇸 Mostrar / ocultar traducción</button>
+ <button onclick="escucharRespuesta()">🎤 Hablar con Jony</button>
+ <p id="respuestaAlumno"></p> 
   <p>Próximamente añadiremos ejercicios interactivos.</p>
 <script>
 function hablarJony(velocidad) {
@@ -55,6 +57,38 @@ function alternarTraduccion() {
   } else {
     traduccion.style.display = "none";
   }
+}
+function escucharRespuesta() {
+  const Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const resultado = document.getElementById("respuestaAlumno");
+
+  if (!Reconocimiento) {
+    resultado.textContent = "Tu navegador no admite el reconocimiento de voz.";
+    return;
+  }
+
+  const reconocimiento = new Reconocimiento();
+
+  reconocimiento.lang = "en-GB";
+  reconocimiento.continuous = false;
+  reconocimiento.interimResults = false;
+
+  resultado.textContent = "🎤 Escuchando... Habla en inglés.";
+
+  reconocimiento.onresult = function(evento) {
+    const texto = evento.results[0][0].transcript;
+    resultado.textContent = "🎤 Has dicho: " + texto;
+  };
+
+  reconocimiento.onerror = function(evento) {
+    resultado.textContent = "No se ha podido reconocer tu voz. Error: " + evento.error;
+  };
+
+  reconocimiento.onnomatch = function() {
+    resultado.textContent = "No he podido entender tu respuesta. Inténtalo otra vez.";
+  };
+
+  reconocimiento.start();
 }
 </script>
 </body>
