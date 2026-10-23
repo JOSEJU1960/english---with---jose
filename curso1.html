@@ -19,8 +19,34 @@
 
   <h3>🇬🇧 Meet Jony</h3>
   <p><strong>Jony:</strong> Hello! I'm Jony. What's your name?</p>
+  <button onclick="hablarJony(1)">🔊 Escuchar normal</button>
+<button onclick="hablarJony(0.7)">🐢 Escuchar lento</button>
   <p><strong>Traducción:</strong> ¡Hola! Soy Jony. ¿Cómo te llamas?</p>
 
   <p>Próximamente añadiremos ejercicios interactivos.</p>
+<script>
+function hablarJony(velocidad) {
+  const texto = "Hello! I'm Jony. What's your name?";
+
+  speechSynthesis.cancel();
+
+  const mensaje = new SpeechSynthesisUtterance(texto);
+
+  mensaje.lang = "en-GB";
+  mensaje.rate = velocidad;
+
+  const voces = speechSynthesis.getVoices();
+
+  const vozBritanica = voces.find(voz =>
+    voz.lang.toLowerCase().startsWith("en-gb")
+  );
+
+  if (vozBritanica) {
+    mensaje.voice = vozBritanica;
+  }
+
+  speechSynthesis.speak(mensaje);
+}
+</script>
 </body>
 </html>
