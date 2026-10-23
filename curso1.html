@@ -117,10 +117,31 @@ function comprobarRespuesta(texto) {
   if (nombre) {
     correccion.textContent =
       "✅ Correcto. Nice to meet you, " + nombre + "!";
+  hablarJonyRespuesta("Nice to meet you, " + nombre + "!");  
   } else {
     correccion.textContent =
       "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
   }
+}
+function hablarJonyRespuesta(texto) {
+  speechSynthesis.cancel();
+
+  const mensaje = new SpeechSynthesisUtterance(texto);
+
+  mensaje.lang = "en-GB";
+  mensaje.rate = 0.9;
+
+  const voces = speechSynthesis.getVoices();
+
+  const vozBritanica = voces.find(voz =>
+    voz.lang.toLowerCase().startsWith("en-gb")
+  );
+
+  if (vozBritanica) {
+    mensaje.voice = vozBritanica;
+  }
+
+  speechSynthesis.speak(mensaje);
 }
 </script>
 </body>
