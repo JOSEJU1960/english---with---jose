@@ -28,6 +28,7 @@
  <p id="correccionAlumno"></p> 
   <p>Próximamente añadiremos ejercicios interactivos.</p>
 <script>
+let pasoConversacion = 1;  
 function hablarJony(velocidad) {
   const texto = "Hello! I'm Jony. What's your name?";
 
@@ -117,9 +118,13 @@ function comprobarRespuesta(texto) {
                  nombreCorto?.[1];
 
   if (nombre) {
+  pasoConversacion = 2;  
     correccion.textContent =
       "✅ Correcto. Nice to meet you, " + nombre + "!";
-  hablarJonyRespuesta("Nice to meet you, " + nombre + "!");  
+  hablarJonyRespuesta("Nice to meet you, " + nombre + "!");
+ setTimeout(function() {
+  preguntarOrigen();
+}, 2500);   
   } else {
     correccion.textContent =
       "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
@@ -145,6 +150,9 @@ function hablarJonyRespuesta(texto) {
 
   speechSynthesis.speak(mensaje);
 }
+ function preguntarOrigen() {
+  hablarJonyRespuesta("Where are you from?");
+} 
 </script>
 </body>
 </html>
