@@ -121,16 +121,15 @@ function comprobarRespuesta(texto) {
   pasoConversacion = 2;  
     correccion.textContent =
       "✅ Correcto. Nice to meet you, " + nombre + "!";
-  hablarJonyRespuesta("Nice to meet you, " + nombre + "!");
- setTimeout(function() {
-alert("Jony va a preguntar de dónde eres");
-}, 2500);   
+ hablarJonyRespuesta("Nice to meet you, " + nombre + "!", function() {
+  preguntarOrigen();
+});
   } else {
     correccion.textContent =
       "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
   }
 }
-function hablarJonyRespuesta(texto) {
+function hablarJonyRespuesta(texto, alTerminar) {
   speechSynthesis.cancel();
 
   const mensaje = new SpeechSynthesisUtterance(texto);
@@ -147,7 +146,11 @@ function hablarJonyRespuesta(texto) {
   if (vozBritanica) {
     mensaje.voice = vozBritanica;
   }
-
+mensaje.onend = function() {
+  if (alTerminar) {
+    alTerminar();
+  }
+};
   speechSynthesis.speak(mensaje);
 }
  function preguntarOrigen() {
