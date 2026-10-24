@@ -97,7 +97,10 @@ function escucharRespuesta() {
 }
 function comprobarRespuesta(texto) {
   const correccion = document.getElementById("correccionAlumno");
-
+if (pasoConversacion === 2) {
+  comprobarOrigen(texto);
+  return;
+}
   const respuesta = texto
     .toLowerCase()
     .trim()
@@ -153,9 +156,26 @@ mensaje.onend = function() {
 };
   speechSynthesis.speak(mensaje);
 }
- function preguntarOrigen() {
-  hablarJonyRespuesta("Where are you from?");
+function preguntarOrigen() {
+  hablarJonyRespuesta("Where are you from?", function() {
+    escucharRespuesta();
+  });
 } 
+
+function comprobarOrigen(texto) {
+  const correccion = document.getElementById("correccionAlumno");
+
+  const respuesta = texto.toLowerCase().trim();
+
+  if (/^(i'm|i am) from .+/.test(respuesta)) {
+    correccion.textContent = "✅ Correcto. Very good!";
+    pasoConversacion = 3;
+    hablarJonyRespuesta("That's great!");
+  } else {
+    correccion.textContent =
+      "🔄 Inténtalo de nuevo. Puedes decir: I'm from Cartagena.";
+  }
+}  
 </script>
 </body>
 </html>
