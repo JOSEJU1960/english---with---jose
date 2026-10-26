@@ -172,8 +172,8 @@ function comprobarOrigen(texto) {
     pasoConversacion = 3;
     hablarJonyRespuesta("That's great!");
   } else {
-    correccion.textContent =
-      "🔄 Inténtalo de nuevo. Puedes decir: I'm from Cartagena.";
+correccion.textContent =
+  "❌ Recuerda: para indicar de dónde eres utilizamos 'I'm from...'. Por ejemplo: I'm from Cartagena. Inténtalo otra vez.";  
 hablarJonyRespuesta("Try again, please.", function() {
   escucharRespuesta();
 });
