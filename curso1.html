@@ -167,6 +167,14 @@ function comprobarOrigen(texto) {
 
   const respuesta = texto.toLowerCase().trim();
 
+ if (/^(i'm|i am) (?!from\b)[a-z]+/.test(respuesta)) {
+  correccion.textContent =
+    "❌ Te falta la preposición FROM. Debes decir: I'm from Cartagena.";
+  hablarJonyRespuesta("Try again, please.", function() {
+    escucharRespuesta();
+  });
+  return;
+}
   if (/^(i'm|i am) from .+/.test(respuesta)) {
     correccion.textContent = "✅ Correcto. Very good!";
     pasoConversacion = 3;
