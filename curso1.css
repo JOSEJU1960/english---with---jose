@@ -66,3 +66,14 @@ button:active {
     border-color: #2563eb;
     outline: none;
 }
+
+/* TARJETAS DE LA APLICACIÓN */
+
+.tarjeta {
+    background-color: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #2563eb;
+}
