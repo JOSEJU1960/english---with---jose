@@ -48,3 +48,21 @@ button:hover {
 button:active {
     transform: scale(0.97);
 }
+/* CUADRO PARA ESCRIBIR RESPUESTAS */
+
+#respuestaEscrita {
+    width: 280px;
+    max-width: 90%;
+    padding: 14px;
+    font-size: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    background-color: white;
+    color: #243247;
+    box-sizing: border-box;
+}
+
+#respuestaEscrita:focus {
+    border-color: #2563eb;
+    outline: none;
+}
