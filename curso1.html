@@ -24,11 +24,14 @@
   <p id="traduccionJony" style="display:none;"><strong>Traducción:</strong> ¡Hola! Soy Jony. ¿Cómo te llamas?</p>
 <button onclick="alternarTraduccion()">🇪🇸 Mostrar / ocultar traducción</button>
  <button onclick="escucharRespuesta()">🎤 Hablar con Jony</button>
+ <input type="text" id="respuestaEscrita" placeholder="Escribe aquí tu respuesta en inglés">
+ <button onclick="enviarRespuestaEscrita()">⌨️ Enviar respuesta</button> 
  <p id="respuestaAlumno"></p>
  <p id="correccionAlumno"></p> 
   <p>Próximamente añadiremos ejercicios interactivos.</p>
 <script>
-let pasoConversacion = 1;  
+let pasoConversacion = 1;
+ let modoRespuesta = "voz"; 
 function hablarJony(velocidad) {
   const texto = "Hello! I'm Jony. What's your name?";
 
@@ -124,9 +127,13 @@ if (pasoConversacion === 2) {
   pasoConversacion = 2;  
     correccion.textContent =
       "✅ Correcto. Nice to meet you, " + nombre + "!";
- hablarJonyRespuesta("Nice to meet you, " + nombre + "!", function() {
+if (modoRespuesta === "teclado") {
   preguntarOrigen();
-});
+} else {
+  hablarJonyRespuesta("Nice to meet you, " + nombre + "!", function() {
+    preguntarOrigen();
+  });
+}
   } else {
     correccion.textContent =
       "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
@@ -157,8 +164,15 @@ mensaje.onend = function() {
   speechSynthesis.speak(mensaje);
 }
 function preguntarOrigen() {
+ if (modoRespuesta === "teclado") {
+  document.getElementById("respuestaAlumno").textContent =
+    "🇬🇧 Jony: Where are you from?";
+  return;
+} 
   hablarJonyRespuesta("Where are you from?", function() {
-    escucharRespuesta();
+if (modoRespuesta === "voz") {
+  escucharRespuesta();
+}
   });
 } 
 
@@ -170,23 +184,47 @@ function comprobarOrigen(texto) {
  if (/^(i'm|i am) (?!from\b)[a-z]+/.test(respuesta)) {
   correccion.textContent =
     "❌ Te falta la preposición FROM. Debes decir: I'm from Cartagena.";
+  if (modoRespuesta === "voz") {
   hablarJonyRespuesta("Try again, please.", function() {
     escucharRespuesta();
   });
+}
   return;
 }
   if (/^(i'm|i am) from .+/.test(respuesta)) {
     correccion.textContent = "✅ Correcto. Very good!";
     pasoConversacion = 3;
-    hablarJonyRespuesta("That's great!");
+  if (modoRespuesta === "teclado") {
+  correccion.textContent = "✅ Jony: That's great! (¡Qué bien!)";
+} else {
+  hablarJonyRespuesta("That's great!");
+} 
   } else {
 correccion.textContent =
   "❌ Recuerda: para indicar de dónde eres utilizamos 'I'm from...'. Por ejemplo: I'm from Cartagena. Inténtalo otra vez.";  
-hablarJonyRespuesta("Try again, please.", function() {
-  escucharRespuesta();
-});
+if (modoRespuesta === "voz") {
+  hablarJonyRespuesta("Try again, please.", function() {
+    escucharRespuesta();
+  });
+}
   }
-}  
+} 
+ function enviarRespuestaEscrita() {
+  modoRespuesta = "teclado"; 
+  const campo = document.getElementById("respuestaEscrita");
+  const texto = campo.value.trim();
+
+  if (texto === "") {
+    alert("Escribe primero una respuesta en inglés.");
+    return;
+  }
+
+  document.getElementById("respuestaAlumno").textContent =
+    "⌨️ Has escrito: " + texto;
+
+  comprobarRespuesta(texto);
+  campo.value = "";
+} 
 </script>
 </body>
 </html>
