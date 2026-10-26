@@ -77,3 +77,38 @@ button:active {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-left: 5px solid #2563eb;
 }
+
+/* DISEÑO DE LAS TRES SUBTARJETAS */
+
+.subtarjeta {
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 14px;
+}
+
+/* LISTENING - AZUL CLARO */
+
+.escuchar {
+    background-color: #eaf3ff;
+}
+
+/* SPEAKING & WRITING - VERDE SUAVE */
+
+.responder {
+    background-color: #eaf8ef;
+}
+
+/* CONVERSATION - GRIS AZULADO */
+
+.conversacion {
+    background-color: #f1f5f9;
+}
+
+/* TÍTULOS DE LAS SUBTARJETAS */
+
+.subtarjeta h4 {
+    color: #17365d;
+    font-size: 17px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
