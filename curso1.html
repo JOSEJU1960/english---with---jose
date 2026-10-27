@@ -47,6 +47,15 @@
 <script>
 let pasoConversacion = 1;
  let modoRespuesta = "voz"; 
+ function agregarMensaje(remitente, texto) {
+    const historial = document.getElementById("historialConversacion");
+
+    const mensaje = document.createElement("div");
+    mensaje.className = "mensaje " + remitente;
+    mensaje.textContent = texto;
+
+    historial.appendChild(mensaje);
+} 
 function hablarJony(velocidad) {
   const texto = "Hello! I'm Jony. What's your name?";
 
