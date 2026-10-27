@@ -246,7 +246,8 @@ if (modoRespuesta === "voz") {
   document.getElementById("respuestaAlumno").textContent =
     "⌨️ Has escrito: " + texto;
 
-  comprobarRespuesta(texto);
+ agregarMensaje("alumno", "Tú: " + texto);
+   comprobarRespuesta(texto);
   campo.value = "";
 } 
 function reiniciarConversacion() {
