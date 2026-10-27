@@ -260,6 +260,8 @@ function reiniciarConversacion() {
   document.getElementById("respuestaEscrita").value = "";
 
   speechSynthesis.cancel();
+  document.getElementById("historialConversacion").innerHTML = "";
+agregarMensaje("jony", "Jony: What's your name?");
 }  
 </script>
 </body>
