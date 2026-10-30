@@ -189,8 +189,7 @@ mensaje.onend = function() {
 }
 function preguntarOrigen() {
  if (modoRespuesta === "teclado") {
-  document.getElementById("respuestaAlumno").textContent =
-    "🇬🇧 Jony: Where are you from?";
+agregarMensaje("jony", "Jony: Where are you from?"); 
   return;
 } 
   hablarJonyRespuesta("Where are you from?", function() {
