@@ -106,7 +106,7 @@ function escucharRespuesta() {
 
   reconocimiento.onresult = function(evento) {
     const texto = evento.results[0][0].transcript;
-    resultado.textContent = "🎤 Has dicho: " + texto;
+   resultado.textContent = "";
   if (texto.trim() !== "") {
     agregarMensaje("alumno", "Tú: " + texto);
 } 
