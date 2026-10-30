@@ -32,7 +32,7 @@
  <div class="subtarjeta responder">
     <h4>🎤 SPEAKING & WRITING — Responder</h4> 
  <button onclick="escucharRespuesta()">🎤 Hablar con Jony</button>
- <input type="text" id="respuestaEscrita" placeholder="Escribe aquí tu respuesta en inglés">
+ <input type="text" id="respuestaEscrita" placeholder="Escribe aquí tu respuesta en inglés" onkeydown="if(event.key === 'Enter') enviarRespuestaEscrita()">
  <button onclick="enviarRespuestaEscrita()">⌨️ Enviar respuesta</button> 
  </div> 
   <div class="subtarjeta conversacion">
