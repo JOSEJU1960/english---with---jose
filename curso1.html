@@ -242,9 +242,7 @@ if (modoRespuesta === "voz") {
     return;
   }
 
-  document.getElementById("respuestaAlumno").textContent =
-    "⌨️ Has escrito: " + texto;
-
+ 
  agregarMensaje("alumno", "Tú: " + texto);
    comprobarRespuesta(texto);
   campo.value = "";
