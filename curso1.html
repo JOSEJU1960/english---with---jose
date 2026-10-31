@@ -88,6 +88,7 @@ function alternarTraduccion() {
   }
 }
 function escucharRespuesta() {
+ modoRespuesta = "voz"; 
   const Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
   const resultado = document.getElementById("respuestaAlumno");
 
