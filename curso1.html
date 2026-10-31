@@ -168,7 +168,7 @@ if (modoRespuesta === "teclado") {
 }
 function hablarJonyRespuesta(texto, alTerminar) {
   speechSynthesis.cancel();
-
+agregarMensaje("jony", "Jony: " + texto);
   const mensaje = new SpeechSynthesisUtterance(texto);
 
   mensaje.lang = "en-GB";
