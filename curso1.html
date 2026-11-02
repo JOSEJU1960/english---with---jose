@@ -31,7 +31,8 @@
  </div> 
  <div class="subtarjeta responder">
     <h4>🎤 SPEAKING & WRITING — Responder</h4> 
-<button onclick="hablarJonyRespuesta('What\'s your name?', function() { escucharRespuesta(); })">🎤 Hablar con Jony</button>
+<button onclick="iniciarConversacionVoz()">🎤 Hablar con Jony</button>
+<button onclick="detenerConversacion()">⏹️ Detener conversación</button>
  <input type="text" id="respuestaEscrita" placeholder="Escribe aquí tu respuesta en inglés" onkeydown="if(event.key === 'Enter') enviarRespuestaEscrita()">
  <button onclick="enviarRespuestaEscrita()">⌨️ Enviar respuesta</button> 
  </div> 
@@ -45,225 +46,305 @@
   </div>
   <p>Próximamente añadiremos ejercicios interactivos.</p>
 <script>
-let pasoConversacion = 1;
- let modoRespuesta = "voz"; 
- function agregarMensaje(remitente, texto) {
-    const historial = document.getElementById("historialConversacion");
+// Conversación guiada de cinco preguntas: voz y teclado.
+let pasoConversacion = 0;
+let modoRespuesta = "voz";
+let reconocimientoActivo = null;
+let conversacionActiva = false;
+let tokenConversacion = 0;
+const preguntas = [
+  "What's your name?",
+  "Where are you from?",
+  "How old are you?",
+  "What do you like doing?",
+  "Do you speak English?"
+];
 
-    const mensaje = document.createElement("div");
-    mensaje.className = "mensaje " + remitente;
-    mensaje.textContent = texto;
+function agregarMensaje(remitente, texto) {
+  const historial = document.getElementById("historialConversacion");
+  const mensaje = document.createElement("div");
+  mensaje.className = "mensaje " + remitente;
+  mensaje.textContent = texto;
+  historial.appendChild(mensaje);
+  mensaje.scrollIntoView({block: "nearest", behavior: "smooth"});
+}
 
-    historial.appendChild(mensaje);
-} 
-function hablarJony(velocidad) {
-  const texto = "Hello! I'm Jony. What's your name?";
-
-  speechSynthesis.cancel();
-
-  const mensaje = new SpeechSynthesisUtterance(texto);
-
-  mensaje.lang = "en-GB";
-  mensaje.rate = velocidad;
-
-  const voces = speechSynthesis.getVoices();
-
-  const vozBritanica = voces.find(voz =>
+function vozBritanica() {
+  return speechSynthesis.getVoices().find(voz =>
     voz.lang.toLowerCase().startsWith("en-gb")
   );
+}
 
-  if (vozBritanica) {
-    mensaje.voice = vozBritanica;
-  }
-
+function hablarJony(velocidad) {
+  const mensaje = new SpeechSynthesisUtterance("Hello! I'm Jony. What's your name?");
+  speechSynthesis.cancel();
+  mensaje.lang = "en-GB";
+  mensaje.rate = velocidad;
+  const voz = vozBritanica();
+  if (voz) mensaje.voice = voz;
   speechSynthesis.speak(mensaje);
 }
+
 function alternarTraduccion() {
   const traduccion = document.getElementById("traduccionJony");
-
-  if (traduccion.style.display === "none") {
-    traduccion.style.display = "block";
-  } else {
-    traduccion.style.display = "none";
-  }
+  traduccion.style.display = traduccion.style.display === "none" ? "block" : "none";
 }
+
+function limpiarEstado() {
+  tokenConversacion++;
+  conversacionActiva = false;
+  if (reconocimientoActivo) {
+    const anterior = reconocimientoActivo;
+    reconocimientoActivo = null;
+    anterior.onresult = null;
+    anterior.onend = null;
+    anterior.onerror = null;
+    anterior.onnomatch = null;
+    try { anterior.abort(); } catch (error) { /* ya estaba cerrado */ }
+  }
+  speechSynthesis.cancel();
+  document.getElementById("respuestaAlumno").textContent = "";
+}
+
+function prepararNuevaConversacion(modo) {
+  limpiarEstado();
+  pasoConversacion = 0;
+  modoRespuesta = modo;
+  document.getElementById("respuestaEscrita").value = "";
+  document.getElementById("correccionAlumno").textContent = "";
+  document.getElementById("historialConversacion").innerHTML = "";
+  conversacionActiva = true;
+  preguntarActual();
+}
+
+function reiniciarConversacion() {
+  // El reinicio comienza una conversación por teclado y muestra la pregunta 1.
+  prepararNuevaConversacion("teclado");
+}
+
+function detenerConversacion() {
+  limpiarEstado();
+  document.getElementById("respuestaAlumno").textContent = "⏹️ Conversación detenida. Puedes reiniciarla cuando quieras.";
+}
+
+function hablarJonyRespuesta(texto, alTerminar) {
+  const token = tokenConversacion;
+  agregarMensaje("jony", "Jony: " + texto);
+  if (modoRespuesta !== "voz") return;
+  speechSynthesis.cancel();
+  const mensaje = new SpeechSynthesisUtterance(texto);
+  mensaje.lang = "en-GB";
+  mensaje.rate = 0.9;
+  const voz = vozBritanica();
+  if (voz) mensaje.voice = voz;
+  let finalizado = false;
+  function continuar() {
+    if (finalizado || token !== tokenConversacion || !conversacionActiva) return;
+    finalizado = true;
+    if (alTerminar) alTerminar();
+  }
+  mensaje.onend = continuar;
+  mensaje.onerror = continuar;
+  speechSynthesis.speak(mensaje);
+}
+
+function iniciarConversacionVoz() {
+  // Inicio por voz separado del reinicio por teclado: sin preguntas duplicadas.
+  prepararNuevaConversacion("voz");
+}
+
+function preguntarActual() {
+  if (!conversacionActiva || pasoConversacion >= preguntas.length) return;
+  document.getElementById("correccionAlumno").textContent = "";
+  hablarJonyRespuesta(preguntas[pasoConversacion], () => {
+    if (modoRespuesta === "voz") escucharRespuesta();
+  });
+}
+
 function escucharRespuesta() {
- modoRespuesta = "voz"; 
+  if (!conversacionActiva || modoRespuesta !== "voz") return;
   const Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
   const resultado = document.getElementById("respuestaAlumno");
-
   if (!Reconocimiento) {
-    resultado.textContent = "Tu navegador no admite el reconocimiento de voz.";
+    resultado.textContent = "Tu navegador no admite el reconocimiento de voz. Puedes usar el teclado.";
     return;
   }
-
+  if (reconocimientoActivo) return;
   const reconocimiento = new Reconocimiento();
-
+  reconocimientoActivo = reconocimiento;
+  const token = tokenConversacion;
   reconocimiento.lang = "en-GB";
   reconocimiento.continuous = false;
   reconocimiento.interimResults = false;
-
+  let textoReconocido = null;
+  let errorReconocimiento = null;
   resultado.textContent = "🎤 Escuchando... Habla en inglés.";
-
   reconocimiento.onresult = function(evento) {
-    const texto = evento.results[0][0].transcript;
-   resultado.textContent = "";
-  if (texto.trim() !== "") {
-    agregarMensaje("alumno", "Tú: " + texto);
-} 
-  reconocimiento.onend = function() {
-  comprobarRespuesta(texto);
-};
+    textoReconocido = evento.results[0][0].transcript.trim();
   };
-
   reconocimiento.onerror = function(evento) {
-    resultado.textContent = "No se ha podido reconocer tu voz. Error: " + evento.error;
+    errorReconocimiento = evento.error;
   };
-
-  reconocimiento.onnomatch = function() {
-    resultado.textContent = "No he podido entender tu respuesta. Inténtalo otra vez.";
+  reconocimiento.onend = function() {
+    if (reconocimientoActivo === reconocimiento) reconocimientoActivo = null;
+    if (token !== tokenConversacion || !conversacionActiva) return;
+    resultado.textContent = "";
+    if (textoReconocido) {
+      agregarMensaje("alumno", "Tú: " + textoReconocido);
+      comprobarRespuesta(textoReconocido);
+    } else {
+      const explicacion = errorReconocimiento === "network"
+        ? "Error de red del reconocimiento de voz. Comprueba que estás en Edge y vuelve a iniciar."
+        : "No he podido reconocer tu respuesta" + (errorReconocimiento ? " (" + errorReconocimiento + ")" : "") + ". Pulsa «Hablar con Jony» para intentarlo otra vez.";
+      resultado.textContent = explicacion;
+    }
   };
-
-  reconocimiento.start();
+  try { reconocimiento.start(); }
+  catch (error) {
+    reconocimientoActivo = null;
+    resultado.textContent = "No se ha podido iniciar el micrófono. Inténtalo de nuevo.";
+  }
 }
+
+function normalizar(texto) {
+  return texto.toLowerCase().trim().replace(/[.,!?;:]+/g, "").replace(/\s+/g, " ");
+}
+
+function edadEnNumero(expresion) {
+  if (/^\d{1,3}$/.test(expresion)) return Number(expresion);
+  const unidades = {zero:0, one:1, two:2, three:3, four:4, five:5, six:6,
+    seven:7, eight:8, nine:9, ten:10, eleven:11, twelve:12, thirteen:13,
+    fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19};
+  const decenas = {twenty:20, thirty:30, forty:40, fifty:50, sixty:60,
+    seventy:70, eighty:80, ninety:90};
+  const palabras = expresion.toLowerCase().replace(/-/g, " ").split(/\s+/);
+  if (palabras.length === 1) {
+    if (palabras[0] === "hundred") return null;
+    if (palabras[0] in unidades) return unidades[palabras[0]];
+    if (palabras[0] in decenas) return decenas[palabras[0]];
+  }
+  if (palabras.length === 2 && palabras[0] in decenas &&
+      palabras[1] in unidades && unidades[palabras[1]] >= 1 && unidades[palabras[1]] <= 9) {
+    return decenas[palabras[0]] + unidades[palabras[1]];
+  }
+  if (expresion === "one hundred" || expresion === "a hundred") return 100;
+  if (expresion === "one hundred and twenty" || expresion === "one hundred twenty") return 120;
+  return null;
+}
+
+function evaluarRespuesta(texto) {
+  const r = normalizar(texto);
+  if (pasoConversacion === 0) {
+    if (/^my name(?:'s| is) is\b/.test(r)) return {bien:false, consejo:"Has repetido IS. Di: My name is Joseph."};
+    const nombre = r.match(/^(?:my name is |my name's |i am |i'm )([a-zà-ÿ][a-zà-ÿ' -]*)$/i);
+    if (nombre) return {bien:true, respuesta:"Nice to meet you, " + nombre[1].replace(/\b[a-zà-ÿ]/g, letra => letra.toUpperCase()) + "!"};
+    return {bien:false, consejo:"Para presentarte, di: My name is Joseph. O también: I'm Joseph."};
+  }
+  if (pasoConversacion === 1) {
+    if (/^(?:i'm|i am) from [a-zà-ÿ][a-zà-ÿ' -]*$/i.test(r)) return {bien:true, respuesta:"That's great!"};
+    return {bien:false, consejo:"Para decir de dónde eres, utiliza FROM. Por ejemplo: I'm from Cartagena."};
+  }
+  if (pasoConversacion === 2) {
+    const edad = r.match(/^(?:i'm|i am) (.+?)(?: years? old)?$/);
+    const numero = edad ? edadEnNumero(edad[1]) : null;
+    if (numero !== null && numero >= 0 && numero <= 120) return {bien:true, respuesta:"Very good!"};
+    if (/^i have (?:\d|[a-z])/.test(r)) return {bien:false, consejo:"En inglés, la edad se expresa con TO BE, no con HAVE. Di: I'm 65 years old."};
+    if (/^my (?:\d|[a-z])/.test(r)) return {bien:false, consejo:"Para indicar tu edad, empieza con I'm o I am. Ejemplo: I'm sixty-six years old."};
+    return {bien:false, consejo:"Di: I'm 66 years old. También puedes escribir: I'm sixty-six years old. Se admiten distintas edades."};
+  }
+  if (pasoConversacion === 3) {
+    if (/^i(?:'m| am) (?:like|love|enjoy)\b/.test(r)) {
+      return {bien:false, consejo:"No digas 'I'm like'. Di: I like reading books."};
+    }
+    const actividad = r.match(/^i (like|love|enjoy) (.+)$/);
+    if (actividad) {
+      const verbo = actividad[1];
+      const resto = actividad[2];
+      if (/^play\b/.test(resto)) {
+        return {bien:false, consejo:"Después de 'I like', di: I like playing football. También puedes decir: I like to play football."};
+      }
+      if (/^to [a-z]+(?: [a-z' -]+)?$/.test(resto) && verbo !== "enjoy") {
+        return {bien:true, respuesta:"That sounds interesting!"};
+      }
+      if (/^[a-z]+ing(?: [a-z' -]+)?$/.test(resto)) {
+        return {bien:true, respuesta:"That sounds interesting!"};
+      }
+      if (/^(?:football|music|books|films|movies|sports|chocolate|coffee|tea|reading|swimming|walking|cooking|travelling|traveling)$/.test(resto) && verbo !== "enjoy") {
+        return {bien:true, respuesta:"That sounds interesting!"};
+      }
+    }
+    return {bien:false, consejo:"Puedes decir: I like reading books. / I like playing football. / I enjoy cooking. / I like to walk."};
+  }
+  if (pasoConversacion === 4) {
+    // Se admiten respuestas afirmativas, negativas, matizadas y de duda.
+    const respuestaIngles = /^(?:i (?:speak|don't speak|do not speak) (?:a little |some |very well |much )?english|i'm not sure|i am not sure)$/;
+    const afirmativa = /^yes(?: i do| i (?:speak|can speak) (?:a little |some |very well )?english)?$/;
+    const negativa = /^no(?: i don't| i do not| i (?:don't|do not) speak english)?$/;
+    const matizada = /^yes,? but i (?:speak|can speak) (?:a little |some |very well )?english$/;
+    if (respuestaIngles.test(r) || afirmativa.test(r) || negativa.test(r) || matizada.test(r)) {
+      return {bien:true, respuesta:"Thank you for practising with me. See you soon!"};
+    }
+    return {bien:false, consejo:"No he podido interpretar tu respuesta. Puedes decir: Yes, I do. / No, I don't. / Yes, but I speak a little English. / I'm not sure."};
+  }
+  return {bien:false, consejo:"La conversación ha terminado. Pulsa Reiniciar conversación."};
+}
+
 function comprobarRespuesta(texto) {
+  if (!conversacionActiva) return;
   const correccion = document.getElementById("correccionAlumno");
-if (pasoConversacion === 2) {
-  comprobarOrigen(texto);
-  return;
-}
-  const respuesta = texto
-    .toLowerCase()
-    .trim()
-    .replace(/[.!?]+$/g, "");
-
-  if (/^my name'?s is\b/.test(respuesta)) {
-    correccion.textContent =
-      "❌ Has repetido IS. Puedes decir: My name is Josep o My name's Josep.";
+  const evaluacion = evaluarRespuesta(texto);
+  if (!evaluacion.bien) {
+    correccion.textContent = "💡 " + evaluacion.consejo;
+    if (modoRespuesta === "voz") {
+      hablarJonyRespuesta("Try again, please.", () => escucharRespuesta());
+    } else {
+      agregarMensaje("jony", "Jony: Try again, please.");
+    }
     return;
   }
-
-  const nombreCompleto = respuesta.match(/^my name is (.+)$/);
-  const nombreContraido = respuesta.match(/^my name's (.+)$/);
-  const nombreCorto = respuesta.match(/^i'm (.+)$/);
-
-  const nombre = nombreCompleto?.[1] ||
-                 nombreContraido?.[1] ||
-                 nombreCorto?.[1];
-
-  if (nombre) {
-  pasoConversacion = 2;  
-    correccion.textContent =
-      "✅ Correcto. Nice to meet you, " + nombre + "!";
-if (modoRespuesta === "teclado") {
-  preguntarOrigen();
-} else {
-  hablarJonyRespuesta("Nice to meet you, " + nombre + "!", function() {
-    preguntarOrigen();
-  });
-}
-  } else {
-    correccion.textContent =
-      "🔄 Inténtalo de nuevo. Puedes empezar con: My name is... o I'm...";
+  correccion.textContent = "✅ Correcto. Very good!";
+  pasoConversacion++;
+  if (pasoConversacion >= preguntas.length) {
+    hablarJonyRespuesta(evaluacion.respuesta);
+    conversacionActiva = false;
+    document.getElementById("respuestaAlumno").textContent = "✅ Conversación completada. Puedes reiniciarla.";
+    return;
   }
-}
-function hablarJonyRespuesta(texto, alTerminar) {
-  speechSynthesis.cancel();
-agregarMensaje("jony", "Jony: " + texto);
-  const mensaje = new SpeechSynthesisUtterance(texto);
-
-  mensaje.lang = "en-GB";
-  mensaje.rate = 0.9;
-
-  const voces = speechSynthesis.getVoices();
-
-  const vozBritanica = voces.find(voz =>
-    voz.lang.toLowerCase().startsWith("en-gb")
-  );
-
-  if (vozBritanica) {
-    mensaje.voice = vozBritanica;
-  }
-mensaje.onend = function() {
-  if (alTerminar) {
-    alTerminar();
-  }
-};
-  speechSynthesis.speak(mensaje);
-}
-function preguntarOrigen() {
- if (modoRespuesta === "teclado") {
-agregarMensaje("jony", "Jony: Where are you from?"); 
-  return;
-} 
-  hablarJonyRespuesta("Where are you from?", function() {
-if (modoRespuesta === "voz") {
-  escucharRespuesta();
-}
-  });
-} 
-
-function comprobarOrigen(texto) {
-  const correccion = document.getElementById("correccionAlumno");
-
-  const respuesta = texto.toLowerCase().trim();
-
- if (/^(i'm|i am) (?!from\b)[a-z]+/.test(respuesta)) {
-  correccion.textContent =
-    "❌ Te falta la preposición FROM. Debes decir: I'm from Cartagena.";
   if (modoRespuesta === "voz") {
-  hablarJonyRespuesta("Try again, please.", function() {
-    escucharRespuesta();
-  });
-}
-  return;
-}
-  if (/^(i'm|i am) from .+/.test(respuesta)) {
-    correccion.textContent = "✅ Correcto. Very good!";
-    pasoConversacion = 3;
-  if (modoRespuesta === "teclado") {
-  correccion.textContent = "✅ Jony: That's great! (¡Qué bien!)";
-} else {
-  hablarJonyRespuesta("That's great!");
-} 
+    hablarJonyRespuesta(evaluacion.respuesta, () => preguntarActual());
   } else {
-correccion.textContent =
-  "❌ Recuerda: para indicar de dónde eres utilizamos 'I'm from...'. Por ejemplo: I'm from Cartagena. Inténtalo otra vez.";  
-if (modoRespuesta === "voz") {
-  hablarJonyRespuesta("Try again, please.", function() {
-    escucharRespuesta();
-  });
-}
+    hablarJonyRespuesta(evaluacion.respuesta);
+    preguntarActual();
   }
-} 
- function enviarRespuestaEscrita() {
-  modoRespuesta = "teclado"; 
+}
+
+function enviarRespuestaEscrita() {
   const campo = document.getElementById("respuestaEscrita");
   const texto = campo.value.trim();
-
-  if (texto === "") {
-    alert("Escribe primero una respuesta en inglés.");
-    return;
+  if (!texto) { alert("Escribe primero una respuesta en inglés."); return; }
+  if (!conversacionActiva) {
+    const historial = document.getElementById("historialConversacion");
+    // Solo iniciar con teclado si el historial está vacío.
+    // Nunca borrar una conversación existente al enviar una respuesta.
+    if (historial.children.length > 0) {
+      document.getElementById("respuestaAlumno").textContent =
+        "La conversación está detenida o finalizada. Pulsa Reiniciar conversación para comenzar otra.";
+      return;
+    }
+    modoRespuesta = "teclado";
+    pasoConversacion = 0;
+    conversacionActiva = true;
+    preguntarActual();
   }
-
- 
- agregarMensaje("alumno", "Tú: " + texto);
-   comprobarRespuesta(texto);
+  if (modoRespuesta !== "teclado") {
+    limpiarEstado();
+    modoRespuesta = "teclado";
+    conversacionActiva = true;
+  }
+  agregarMensaje("alumno", "Tú: " + texto);
   campo.value = "";
-} 
-function reiniciarConversacion() {
-  pasoConversacion = 1;
-modoRespuesta = "voz";
- document.getElementById("respuestaAlumno").textContent = "";
-
-  document.getElementById("correccionAlumno").textContent = "";
-
-  document.getElementById("respuestaEscrita").value = "";
-
-  speechSynthesis.cancel();
-  document.getElementById("historialConversacion").innerHTML = "";
-
-}  
+  comprobarRespuesta(texto);
+}
 </script>
 </body>
 </html>
