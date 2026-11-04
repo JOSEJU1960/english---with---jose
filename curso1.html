@@ -33,6 +33,7 @@
     <h4>🎤 SPEAKING & WRITING — Responder</h4> 
 <button onclick="iniciarConversacionVoz()">🎤 Hablar con Jony</button>
 <button onclick="detenerConversacion()">⏹️ Detener conversación</button>
+<button onclick="repetirPregunta()">🔁 Repetir pregunta</button>
  <input type="text" id="respuestaEscrita" placeholder="Escribe aquí tu respuesta en inglés" onkeydown="if(event.key === 'Enter') enviarRespuestaEscrita()">
  <button onclick="enviarRespuestaEscrita()">⌨️ Enviar respuesta</button> 
  </div> 
@@ -122,6 +123,29 @@ function reiniciarConversacion() {
   prepararNuevaConversacion("teclado");
 }
 
+function repetirPregunta() {
+  const aviso = document.getElementById("respuestaAlumno");
+  if (pasoConversacion >= preguntas.length) {
+    aviso.textContent = "La conversación ha terminado. Pulsa Reiniciar conversación para comenzar otra.";
+    return;
+  }
+  // Invalida las devoluciones de voz pendientes sin borrar el historial.
+  tokenConversacion++;
+  if (reconocimientoActivo) {
+    const anterior = reconocimientoActivo;
+    reconocimientoActivo = null;
+    anterior.onresult = null;
+    anterior.onend = null;
+    anterior.onerror = null;
+    try { anterior.abort(); } catch (error) { /* ya estaba cerrado */ }
+  }
+  speechSynthesis.cancel();
+  conversacionActiva = true;
+  modoRespuesta = "voz";
+  aviso.textContent = "";
+  preguntarActual();
+}
+
 function detenerConversacion() {
   limpiarEstado();
   document.getElementById("respuestaAlumno").textContent = "⏹️ Conversación detenida. Puedes reiniciarla cuando quieras.";
@@ -194,15 +218,15 @@ function escucharRespuesta() {
       comprobarRespuesta(textoReconocido);
     } else {
       const explicacion = errorReconocimiento === "network"
-        ? "Error de red del reconocimiento de voz. Comprueba que estás en Edge y vuelve a iniciar."
-        : "No he podido reconocer tu respuesta" + (errorReconocimiento ? " (" + errorReconocimiento + ")" : "") + ". Pulsa «Hablar con Jony» para intentarlo otra vez.";
+        ? "Error de red del reconocimiento de voz. Comprueba la conexión y pulsa «Repetir pregunta» para volver a intentarlo."
+        : "No he podido reconocer tu respuesta" + (errorReconocimiento ? " (" + errorReconocimiento + ")" : "") + ". Pulsa «Repetir pregunta» para escucharla de nuevo y responder sin perder el historial.";
       resultado.textContent = explicacion;
     }
   };
   try { reconocimiento.start(); }
   catch (error) {
     reconocimientoActivo = null;
-    resultado.textContent = "No se ha podido iniciar el micrófono. Inténtalo de nuevo.";
+    resultado.textContent = "No se ha podido iniciar el micrófono. Pulsa «Repetir pregunta» para intentarlo otra vez.";
   }
 }
 
@@ -245,9 +269,18 @@ function evaluarRespuesta(texto) {
     return {bien:false, consejo:"Para decir de dónde eres, utiliza FROM. Por ejemplo: I'm from Cartagena."};
   }
   if (pasoConversacion === 2) {
-    const edad = r.match(/^(?:i'm|i am) (.+?)(?: years? old)?$/);
+    const edad = r.match(/^(?:i'm|i am) (.+?)(?: (year|years) old)?$/);
     const numero = edad ? edadEnNumero(edad[1]) : null;
-    if (numero !== null && numero >= 0 && numero <= 120) return {bien:true, respuesta:"Very good!"};
+    if (numero !== null && numero >= 0 && numero <= 120) {
+      const unidadEdad = edad[2];
+      if (unidadEdad === "year" && numero !== 1) {
+        return {bien:false, consejo:"Para edades distintas de 1, utiliza YEARS en plural. Di: I'm " + numero + " years old."};
+      }
+      if (unidadEdad === "years" && numero === 1) {
+        return {bien:false, consejo:"Con 1, utiliza YEAR en singular. Di: I'm one year old."};
+      }
+      return {bien:true, respuesta:"Very good!"};
+    }
     if (/^i have (?:\d|[a-z])/.test(r)) return {bien:false, consejo:"En inglés, la edad se expresa con TO BE, no con HAVE. Di: I'm 65 years old."};
     if (/^my (?:\d|[a-z])/.test(r)) return {bien:false, consejo:"Para indicar tu edad, empieza con I'm o I am. Ejemplo: I'm sixty-six years old."};
     return {bien:false, consejo:"Di: I'm 66 years old. También puedes escribir: I'm sixty-six years old. Se admiten distintas edades."};
